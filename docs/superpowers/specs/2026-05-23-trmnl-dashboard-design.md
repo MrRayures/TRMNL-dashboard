@@ -3,17 +3,36 @@
 **Date :** 2026-05-23
 **Statut :** Validé (brainstorming)
 **Framework :** [trmnlp](https://github.com/usetrmnl/trmnlp)
+**Appareil cible :** [TRMNL X](https://shop.trmnl.com/collections/devices/products/trmnl-x)
+
+## 0. Appareil cible — TRMNL X
+
+| | TRMNL classique | **TRMNL X (cible)** |
+|---|---|---|
+| Résolution | 800 × 480 | **1872 × 1404** |
+| Taille | 7,5" | **10,3"** |
+| Niveaux de gris | 1 bit (N&B) | **16 niveaux de gris** |
+| Orientation | paysage | paysage **+ portrait** |
+
+**Choix v1 :**
+- **Orientation : paysage** (1872 × 1404). La disposition 2 colonnes validée reste
+  identique, simplement agrandie à cette résolution.
+- **Rendu : noir & blanc** pour la v1. Les 16 niveaux de gris restent disponibles
+  pour un raffinement ultérieur (fonds de blocs, hiérarchie de texte), hors v1.
+- À vérifier à l'implémentation : comment `trmnlp` (historiquement calé sur
+  800×480) gère la résolution du X — via config, viewport, ou rendu adapté.
 
 ## 1. Objectif
 
-Un plugin TRMNL privé affichant, sur un seul écran e-ink plein écran (800×480), un
-tableau de bord personnel combinant trois sources :
+Un plugin TRMNL privé affichant, sur un seul écran e-ink plein écran
+(TRMNL X, 1872 × 1404, paysage), un tableau de bord personnel combinant trois
+sources :
 
 1. **Agenda Google Calendar** — vue semaine (aujourd'hui → +6 jours)
 2. **Horaires de bus STGA / réseau Möbius** — prochains passages du jour, 2 lignes
 3. **Menu de la cantine** — menu du déjeuner du jour (Cuisine Centrale de Saint Yrieix)
 
-## 2. Disposition validée (layout `full`, 800×480)
+## 2. Disposition validée (layout `full`, paysage 1872×1404)
 
 ```
 ┌──────────────────────────────────────────────────────────┐
@@ -186,12 +205,17 @@ Développement test-first par source, à partir de fixtures réelles :
 ## 9. Rendu & vérification
 
 - Templates Liquid + TRMNL Design System reproduisant la disposition validée.
-- Vérification visuelle via `trmnlp serve` (preview HTML + PNG).
+- Cible : 1872×1404 paysage, noir & blanc. Tailles de police et espacements
+  dimensionnés pour cette résolution (lisibilité à ~10").
+- Vérification visuelle via `trmnlp serve` (preview HTML + PNG), en confirmant le
+  rendu à la résolution du TRMNL X.
 
 ## 10. Hors périmètre v1 (YAGNI)
 
 - Temps réel bus (GTFS-RT / Protobuf) — théorique suffit pour e-ink.
 - Layouts half_horizontal / half_vertical / quadrant.
+- Orientation portrait (paysage uniquement en v1).
+- Exploitation des 16 niveaux de gris (noir & blanc en v1).
 - Parsing du PDF de menu (l'API Meridio le remplace avantageusement).
 - OAuth Google Calendar (l'URL iCal privée suffit).
 ```
