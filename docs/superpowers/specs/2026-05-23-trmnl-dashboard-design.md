@@ -173,11 +173,13 @@ samedi / dimanche), et calcule pour chaque ligne le **prochain passage + 2 suiva
 - **Labels (BIO/AOC/AOP)** : au niveau **ingrédient** (`ingredientList[].labelList`),
   pas au niveau recette → on agrège pour un badge par plat.
 - Traitement :
-  - filtrer `meal == "lunch"` (ignorer `snackAfternoon`) ;
-  - regrouper par `dish` dans l'ordre entrée → vpo → accompagnement → laitier →
-    dessert ;
+  - **déjeuner** (`meal == "lunch"`) : regrouper par `dish` dans l'ordre entrée →
+    vpo → accompagnement → laitier → dessert ;
+  - **goûter** (`meal == "snackAfternoon"`) : inclus comme section distincte ; pas
+    de `dish` (valeur `null`) → liste simple des plats du goûter ;
   - agréger les labels des ingrédients pour le badge ;
-  - sortie : `menu = { date, served: bool, courses: [ { type, name, labels } ] }`.
+  - sortie :
+    `menu = { date, served: bool, courses: [...], snack: [ { name, labels } ] }`.
 - Si aucun menu (week-end / vacances) : `served: false` → bloc « Pas de service ».
 
 ## 5. Rafraîchissement

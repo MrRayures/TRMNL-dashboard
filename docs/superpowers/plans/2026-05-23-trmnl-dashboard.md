@@ -450,6 +450,8 @@ git commit -m "feat: bus_source computes next departures from local schedule"
         "ingredientList": [ { "name": "Boulgour", "labelList": ["BIO"] } ] },
       { "meal": "lunch", "dish": "laitier", "name": "Petit suisse", "ingredientList": [] },
       { "meal": "lunch", "dish": "dessert", "name": "Fraises", "ingredientList": [] },
+      { "meal": "snackAfternoon", "dish": null, "name": "Compote de fruits",
+        "ingredientList": [ { "name": "Pomme", "labelList": ["BIO"] } ] },
       { "meal": "snackAfternoon", "dish": null, "name": "Biscuit", "ingredientList": [] }
     ] }
 ]
@@ -476,21 +478,32 @@ def test_served_day_groups_and_orders_courses():
     menu = menu_source.shape(raw)
     assert menu["served"] is True
     types = [c["type"] for c in menu["courses"]]
-    assert types == ["entree", "vpo", "laitier", "dessert"]  # snackAfternoon excluded, ordered
+    assert types == ["entree", "vpo", "laitier", "dessert"]  # lunch only, ordered
     entree = menu["courses"][0]
     assert entree["name"] == "Oeufs mimosa"
+
+def test_snack_included_as_separate_section():
+    raw = _load("tests/fixtures/menuDay_served.json")
+    menu = menu_source.shape(raw)
+    snack_names = [s["name"] for s in menu["snack"]]
+    assert snack_names == ["Compote de fruits", "Biscuit"]
+    # snack items must NOT leak into lunch courses
+    assert all(c["name"] not in snack_names for c in menu["courses"])
 
 def test_labels_aggregated_from_ingredients():
     raw = _load("tests/fixtures/menuDay_served.json")
     menu = menu_source.shape(raw)
     vpo = next(c for c in menu["courses"] if c["type"] == "vpo")
     assert "BIO" in vpo["labels"]
+    compote = next(s for s in menu["snack"] if s["name"] == "Compote de fruits")
+    assert "BIO" in compote["labels"]
 
 def test_empty_day_not_served():
     raw = _load("tests/fixtures/menuDay_empty.json")
     menu = menu_source.shape(raw)
     assert menu["served"] is False
     assert menu["courses"] == []
+    assert menu["snack"] == []
 ```
 
 - [ ] **Step 3: Run test to verify it fails**
@@ -501,27 +514,32 @@ Expected: FAIL (`menu_source` not found).
 - [ ] **Step 4: Implement `lib/menu_source.py`**
 
 ```python
-"""Shape the Meridio menuDay JSON into today's lunch courses."""
+"""Shape the Meridio menuDay JSON into today's lunch courses + afternoon snack."""
 DISH_ORDER = ["entree", "vpo", "accompagnement", "laitier", "dessert"]
+
+def _labels(recipe):
+    labels = set()
+    for ing in (recipe.get("ingredientList") or []):
+        for l in (ing.get("labelList") or []):
+            labels.add(l)
+    return sorted(labels)
 
 def shape(raw_days):
     """raw_days: list as returned by GET /satellite/<code>/menuDay (one or more days).
-    Returns the first day's lunch menu shaped for display."""
+    Returns the first day's menu (lunch courses + snack) shaped for display."""
     if not raw_days:
-        return {"date": None, "served": False, "courses": []}
+        return {"date": None, "served": False, "courses": [], "snack": []}
     day = raw_days[0]
-    recipes = [r for r in day.get("recipeList", []) if r.get("meal") == "lunch"]
-    if not recipes:
-        return {"date": day.get("day"), "served": False, "courses": []}
+    recipes = day.get("recipeList", [])
+    lunch = [r for r in recipes if r.get("meal") == "lunch"]
+    snack_recipes = [r for r in recipes if r.get("meal") == "snackAfternoon"]
+    if not lunch and not snack_recipes:
+        return {"date": day.get("day"), "served": False, "courses": [], "snack": []}
 
     by_dish = {}
-    for r in recipes:
-        labels = set()
-        for ing in (r.get("ingredientList") or []):
-            for l in (ing.get("labelList") or []):
-                labels.add(l)
+    for r in lunch:
         by_dish.setdefault(r.get("dish"), []).append(
-            {"type": r.get("dish"), "name": r.get("name"), "labels": sorted(labels)}
+            {"type": r.get("dish"), "name": r.get("name"), "labels": _labels(r)}
         )
 
     courses = []
@@ -532,7 +550,9 @@ def shape(raw_days):
         if dish not in DISH_ORDER:
             courses.extend(items)
 
-    return {"date": day.get("day"), "served": True, "courses": courses}
+    snack = [{"name": r.get("name"), "labels": _labels(r)} for r in snack_recipes]
+
+    return {"date": day.get("day"), "served": True, "courses": courses, "snack": snack}
 ```
 
 - [ ] **Step 5: Run test to verify it passes**
@@ -708,7 +728,7 @@ import transform_core
 def test_aggregate_combines_three_sources():
     calendar = {"days": [{"date": "2026-05-18", "weekday": "LUN", "label": "LUN 18", "events": []}]}
     bus = [{"line": "9", "direction": "X", "stop": "Transformateur", "next": "08:32", "following": ["08:52"]}]
-    menu = {"date": "2026-05-18", "served": True, "courses": [{"type": "entree", "name": "Oeufs", "labels": []}]}
+    menu = {"date": "2026-05-18", "served": True, "courses": [{"type": "entree", "name": "Oeufs", "labels": []}], "snack": [{"name": "Biscuit", "labels": []}]}
     payload = transform_core.aggregate(calendar=calendar, bus=bus, menu=menu)
     assert payload["calendar"]["days"][0]["label"] == "LUN 18"
     assert payload["bus"][0]["next"] == "08:32"
@@ -741,7 +761,7 @@ def aggregate(calendar=None, bus=None, menu=None, errors=None):
     errors = errors or {}
     safe_calendar = calendar if calendar else {"days": []}
     safe_bus = bus if bus else []
-    safe_menu = menu if menu else {"date": None, "served": False, "courses": []}
+    safe_menu = menu if menu else {"date": None, "served": False, "courses": [], "snack": []}
     return {
         "calendar": safe_calendar,
         "bus": safe_bus,
@@ -984,6 +1004,14 @@ Copy `.trmnlp.yml.example` to `.trmnlp.yml` and paste the real private iCal URL 
               {% for l in c.labels %}<span class="pill">{{ l }}</span>{% endfor %}
             </div>
           {% endfor %}
+          {% if menu.snack.size > 0 %}
+            <div class="row" style="margin-top:10px"><span class="muted strong">Goûter</span></div>
+            {% for s in menu.snack %}
+              <div class="row">
+                {{ s.name }}{% for l in s.labels %}<span class="pill">{{ l }}</span>{% endfor %}
+              </div>
+            {% endfor %}
+          {% endif %}
         {% else %}
           <div class="row muted">Pas de service aujourd'hui</div>
         {% endif %}
