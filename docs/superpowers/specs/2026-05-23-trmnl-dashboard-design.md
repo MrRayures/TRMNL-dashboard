@@ -63,25 +63,35 @@ sources :
 
 ## 3. Architecture
 
-TRMNL n'appelle qu'une seule URL par plugin. On utilise donc un **transform
-serverless en Python** (exécuté avant chaque rendu) qui agrège les 3 sources en un
-seul objet de données consommé par les templates Liquid.
+TRMNL **Polling supporte plusieurs URLs** (séparées par retour ligne, accessibles
+via `IDX_0`, `IDX_1`…), avec interpolation des champs de formulaire
+(`{{ form_field_keyname }}`). On exploite ça : TRMNL poll directement les sources
+réseau, et un **transform serverless Python léger** met en forme et calcule les bus
+depuis un JSON local.
 
 ```
-┌─────────────────────────────────────────────────┐
-│  transform.py — exécuté à chaque refresh (~15min) │
-│    calendar_source.fetch()  → agenda 7 jours      │
-│    bus_source.fetch()       → prochains passages  │
-│    menu_source.fetch()      → menu du jour         │
-│    → { calendar, bus, menu, meta }                │
-└─────────────────────────────────────────────────┘
-                      ↓
-┌─────────────────────────────────────────────────┐
-│  full.liquid + shared.liquid → rendu 800×480      │
-└─────────────────────────────────────────────────┘
+TRMNL Polling (multi-URL)            Transform Python (run(input))
+┌──────────────────────────┐        ┌─────────────────────────────────┐
+│ IDX_0 = API Menu (JSON)  │ ─────► │ menu_source : mise en forme jour │
+│ IDX_1 = iCal (.ics texte)│ ─────► │ calendar_source : parse + récur. │
+│        (voir repli ↓)    │        │ bus_source : lit bus_schedule.json│
+└──────────────────────────┘        │              + prochains passages │
+                                     │ → { calendar, bus, menu, meta }   │
+                                     └─────────────────────────────────┘
+                                                    ↓
+                              full.liquid + shared.liquid → 1872×1404
 ```
 
-**Langage du transform : Python** (parsing iCal, ZIP GTFS et JSON bien outillés).
+**Langage du transform : Python** (parsing iCal, JSON, et lecture du JSON bus).
+
+### Point à vérifier en début d'implémentation — réponse iCal
+Le polling TRMNL est orienté JSON. L'iCal renvoie du **texte `.ics`**. Première
+tâche du plan : vérifier que le polling passe une réponse non-JSON au transform
+comme texte brut.
+- **Cas idéal** : iCal + menu pollés nativement (2 URLs).
+- **Repli (hybride)** : si le polling refuse le `.ics`, seul le menu est pollé
+  nativement ; le transform fetch l'iCal lui-même via HTTP. Le bus reste local
+  dans tous les cas.
 
 ### Tolérance aux pannes
 Chaque source est isolée dans un `try/except`. Si une source échoue (réseau, API
@@ -109,6 +119,16 @@ des valeurs par défaut — l'écran ne plante jamais entièrement.
   ```
 
 ### 4.2 Bus (GTFS statique) — pré-traitement + refresh
+
+**Données GTFS vérifiées (2026-05-23) :**
+- URL stable (toujours la dernière saison) :
+  `https://www.data.gouv.fr/api/1/datasets/r/021fd4a3-ba9a-4d78-aa65-71d4d289f389`
+- Ligne 9 = `route_id` 185 (`route_short_name` "9"), headsign **"St Michel
+  Puygrelier Pkg"**. Arrêt **Transformateur** = station `10386` (quais 20780/20781).
+- Ligne 3 = `route_id` 179 (`route_short_name` "3"), headsign **"Magnac Mairie"**.
+  Arrêt **Nautilis** = station `10598` (quais 21219/21220).
+- Filtrage du sens : par `trip_headsign` (et non par `direction_id`).
+- Type de jour : via `calendar.txt` + `calendar_dates.txt` (exceptions/fériés).
 
 **Pré-traitement one-shot — `bin/build_bus_data.py`**
 Télécharge le GTFS Möbius une fois et extrait un petit JSON pré-filtré
@@ -145,13 +165,18 @@ samedi / dimanche), et calcule pour chaque ligne le **prochain passage + 2 suiva
   `GET /satellite/ivawb/menuDay?startDate=<jour>&endDate=<jour>`
   base : `https://rncuqer6baza2pzhumplpf24da0enxcg.lambda-url.eu-west-3.on.aws`
 - `satelliteCode` = `ivawb` (Cuisine Centrale de Saint Yrieix).
-- Réponse : liste de jours, chacun avec `recipeList` (`meal`, `dish`, `name`,
-  `allergenList`, `labelList`).
+- Réponse vérifiée (2026-05-23) : liste de jours, chacun avec `recipeList`. Champs
+  par recette : `meal` (`lunch` | `snackAfternoon`), `dish`, `name`,
+  `allergenList`, `ingredientList`.
+- Valeurs `dish` du déjeuner observées : `entree`, `vpo` (plat protéiné),
+  `accompagnement`, `laitier`, `dessert`.
+- **Labels (BIO/AOC/AOP)** : au niveau **ingrédient** (`ingredientList[].labelList`),
+  pas au niveau recette → on agrège pour un badge par plat.
 - Traitement :
-  - filtrer `meal == "lunch"` ;
-  - regrouper par `dish` dans l'ordre entrée → vpo/plat → accompagnement →
-    fromage → dessert ;
-  - agréger les labels (ex. BIO) pour le badge ;
+  - filtrer `meal == "lunch"` (ignorer `snackAfternoon`) ;
+  - regrouper par `dish` dans l'ordre entrée → vpo → accompagnement → laitier →
+    dessert ;
+  - agréger les labels des ingrédients pour le badge ;
   - sortie : `menu = { date, served: bool, courses: [ { type, name, labels } ] }`.
 - Si aucun menu (week-end / vacances) : `served: false` → bloc « Pas de service ».
 
