@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TRMNL plugins</title>
+    <style>
+      body { font-family: system-ui, sans-serif; max-width: 40rem; margin: 3rem auto; padding: 0 1rem; }
+      h1 { font-size: 1.25rem; }
+      h2 { font-size: 1rem; margin-top: 2rem; }
+      li { margin: 0.4rem 0; }
+      code, small { font-size: 0.85em; color: #555; }
+    </style>
+  </head>
+  <body>
+    <h1>TRMNL plugins — preview</h1>
+    <p>Query params: <code>?bits=1|2|4</code>, <code>?fixture=&lt;name&gt;</code> (loads <code>fixtures/&lt;name&gt;.json</code>).</p>
+    {% for p in plugins %}
+      <h2>{{ p.title }} <small>plugins/{{ p.name }} · framework {{ p.framework }}</small></h2>
+      <ul>
+        {% for v in p.views %}
+          {% for f in p.fixtures %}
+            {% capture q %}{% if f != 'default' %}fixture={{ f }}{% endif %}{% endcapture %}
+            <li>
+              <a href="/{{ p.name }}/{{ v }}{% if q != '' %}?{{ q }}{% endif %}">{{ v }} · {{ f }}</a>
+              — <a href="/{{ p.name }}/{{ v }}?bits=1{% if q != '' %}&{{ q }}{% endif %}">1-bit</a>
+            </li>
+          {% endfor %}
+        {% endfor %}
+      </ul>
+    {% endfor %}
+  </body>
+</html>
