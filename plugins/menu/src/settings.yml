@@ -9,7 +9,9 @@ dark_mode: 'no'
 static_data: ''
 polling_verb: get
 framework_version: 3.4.7
-polling_url: ''
+# Both dates are required; a wide range returns every published day
+# (~6 weeks, ~150 KB) and transform.js picks today in Europe/Paris.
+polling_url: https://rncuqer6baza2pzhumplpf24da0enxcg.lambda-url.eu-west-3.on.aws/satellite/ivawb/menuDay?startDate=2020-01-01&endDate=2099-12-31
 polling_headers: ''
 name: Menu du jour
 description: Menu de la cantine du jour

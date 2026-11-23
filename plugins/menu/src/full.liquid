@@ -1,20 +1,27 @@
 {% comment %}
-  Canteen menu, full view: lunch courses plus the afternoon snack.
-  Payload contract: see README.md and fixtures/ (service, date_label, lunch[], snack[]).
-  Labels (BIO/AOC/AOP) come from the ingredient level upstream and arrive flattened.
+  Canteen menu, full view. Today's lunch and afternoon snack; on days without
+  service, a notice plus the next published menu.
+  Merge variables come from transform.js: service, day_label, lunch[], snack[]
+  (see README.md).
 {% endcomment %}
 <div class="layout layout--col layout--top layout--align-start">
-  {% if service %}
+  {% if lunch.size > 0 or snack.size > 0 %}
     <div class="flex flex--col gap--small flex--left flex--top w--full" data-overflow="true">
+      {% unless service %}
+        <div class="flex flex--col flex--left">
+          <span class="title">Pas de service aujourd'hui</span>
+          <span class="description">Prochain repas : {{ day_label }}</span>
+        </div>
+        <hr class="border--h-10 w--full" />
+      {% endunless %}
+
       {% for course in lunch %}
         <div class="item">
           <div class="content">
             <span class="description">{{ course.dish }}</span>
             <div class="flex flex--row gap--small">
               <span class="title">{{ course.name }}</span>
-              {% for tag in course.labels %}
-                <span class="label label--small label--outline">{{ tag }}</span>
-              {% endfor %}
+              {% render "menu/badges", labels: course.labels, homemade: course.homemade %}
             </div>
           </div>
         </div>
@@ -22,22 +29,30 @@
 
       {% if snack.size > 0 %}
         <hr class="border--h-10 w--full" />
-        {% for course in snack %}
-          <div class="item">
-            <div class="content">
-              <span class="description">{{ course.dish }}</span>
-              <span class="title">{{ course.name }}</span>
-            </div>
+        <div class="item">
+          <div class="content">
+            <span class="description">Goûter</span>
+            {% for course in snack %}
+              <div class="flex flex--row gap--small">
+                <span class="title">{{ course.name }}</span>
+                {% render "menu/badges", labels: course.labels, homemade: course.homemade %}
+              </div>
+            {% endfor %}
           </div>
-        {% endfor %}
+        </div>
       {% endif %}
     </div>
   {% else %}
-    <span class="title">Pas de service aujourd'hui</span>
+    <div class="flex flex--col flex--left">
+      <span class="title">Pas de service aujourd'hui</span>
+      <span class="description">Aucun menu publié pour les prochains jours</span>
+    </div>
   {% endif %}
 </div>
 
 <div class="title_bar">
   <span class="title">{{ trmnl.plugin_settings.instance_name }}</span>
-  <span class="instance">{{ date_label }}</span>
+  {% if day_label != blank %}
+    <span class="instance">{{ day_label }}</span>
+  {% endif %}
 </div>

@@ -1,0 +1,12 @@
+{% comment %}
+  Partials shared by every view of the menu plugin.
+  menu/badges: BIO/AOP labels then "Fait maison". Params: labels[], homemade.
+{% endcomment %}
+{% template menu/badges %}
+  {% for tag in labels %}
+    <span class="label label--small label--outline">{{ tag }}</span>
+  {% endfor %}
+  {% if homemade %}
+    <span class="label label--small label--underline">Fait maison</span>
+  {% endif %}
+{% endtemplate %}

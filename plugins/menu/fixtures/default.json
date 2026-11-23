@@ -1,14 +1,5 @@
 {
-  "service": true,
-  "date_label": "Lundi 18 mai",
-  "lunch": [
-    { "dish": "Entrée", "name": "Carottes râpées", "labels": ["BIO"] },
-    { "dish": "Plat", "name": "Sauté de veau marengo", "labels": [] },
-    { "dish": "Accompagnement", "name": "Semoule", "labels": [] },
-    { "dish": "Laitier", "name": "Yaourt nature", "labels": ["AOP"] },
-    { "dish": "Dessert", "name": "Compote de pommes", "labels": ["BIO"] }
-  ],
-  "snack": [
-    { "dish": "Goûter", "name": "Pain, chocolat et lait", "labels": [] }
-  ]
+  "_comment": "Monday, lunch served: entrée, plat, accompagnement, laitier + goûter.",
+  "now": "2026-11-23T10:00:00+01:00",
+  "input": "inputs/meridio-2026-11-23.json"
 }

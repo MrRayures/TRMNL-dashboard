@@ -1,0 +1,69 @@
+// node --test: the menu transform against real Meridio data (week of 2026-11-23).
+import { test } from 'node:test'
+import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
+import { runTransform } from '../../../scripts/run-transform.mjs'
+
+const here = (p) => new URL(p, import.meta.url)
+const code = readFileSync(here('../src/transform.js'), 'utf8')
+const week = JSON.parse(readFileSync(here('../fixtures/inputs/meridio-2026-11-23.json'), 'utf8'))
+const run = (now, input = week) => runTransform(code, input, now)
+
+test('served day: lunch in course order, cleaned names, labels, homemade, snack', () => {
+  const out = run('2026-11-23T10:00:00+01:00')
+
+  assert.equal(out.service, true)
+  assert.equal(out.day_label, 'Lundi 23 novembre')
+  assert.deepEqual(
+    out.lunch.map((c) => [c.dish, c.name]),
+    [
+      ['Entrée', 'Carottes râpées'],
+      ['Plat', 'Omelette'], // trailing space trimmed
+      ['Accompagnement', 'Pommes de terres rissolées'],
+      ['Laitier', 'Fromage blanc fermier'],
+    ],
+  )
+  assert.deepEqual(out.lunch[0].labels, ['BIO'])
+  assert.equal(out.lunch[0].homemade, true)
+  assert.equal(out.lunch[1].homemade, false)
+  assert.deepEqual(
+    out.snack.map((s) => s.name),
+    ['Gateau aux yaourt', 'Pommes'],
+  )
+})
+
+test('names are capitalised and labels ordered BIO first', () => {
+  const out = run('2026-11-24T10:00:00+01:00')
+  assert.equal(out.lunch[0].name, "Radis d'hiver")
+  assert.deepEqual(out.lunch.find((c) => c.dish === 'Plat').labels, ['BIO', 'AOP'])
+  assert.equal(out.snack[1].name, 'Clémentine')
+})
+
+test('no service today: next published menu', () => {
+  const out = run('2026-11-25T10:00:00+01:00') // Wednesday
+  assert.equal(out.service, false)
+  assert.equal(out.day_label, 'Jeudi 26 novembre')
+  assert.ok(out.lunch.length > 0)
+})
+
+test('nothing published ahead, or empty input: empty state', () => {
+  const empty = { service: false, day_label: '', lunch: [], snack: [] }
+  assert.deepEqual(run('2026-11-28T10:00:00+01:00'), empty)
+  assert.deepEqual(run('2026-11-23T10:00:00+01:00', []), empty)
+  assert.deepEqual(run('2026-11-23T10:00:00+01:00', {}), empty)
+})
+
+test('accepts the array wrapped under `data`', () => {
+  const out = run('2026-11-23T10:00:00+01:00', { data: week })
+  assert.equal(out.day_label, 'Lundi 23 novembre')
+})
+
+test('uses the Paris date, winter and summer time', () => {
+  // 23:30 UTC on Monday is already Tuesday 00:30 in Paris (UTC+1).
+  assert.equal(run('2026-11-23T23:30:00Z').day_label, 'Mardi 24 novembre')
+  // 22:30 UTC on 30 June is 1 July 00:30 in Paris (UTC+2).
+  const summer = [{ day: '2026-07-01T00:00:00.000Z', recipeList: [{ name: 'x', meal: 'lunch', dish: 'entree' }] }]
+  const out = run('2026-06-30T22:30:00Z', summer)
+  assert.equal(out.service, true)
+  assert.equal(out.day_label, 'Mercredi 1 juillet')
+})
