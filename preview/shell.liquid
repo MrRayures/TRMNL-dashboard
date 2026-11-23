@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ plugin }} / {{ view }} — TRMNL preview</title>
+    <!-- Framework first (version from src/settings.yml), preview chrome after. -->
+    <link rel="stylesheet" href="https://trmnl.com/css/{{ framework }}/plugins.css" />
+    <link rel="stylesheet" href="/preview.css" />
+  </head>
+  <body class="environment trmnl">
+    {% comment %}
+      Preview-only wrapper. TRMNL supplies .screen, .view and .mashup itself;
+      the plugin files only provide what goes inside the view.
+    {% endcomment %}
+    <div class="screen {{ device_class }}">
+      {% if view == 'full' %}
+        <div class="view view--full">{{ markup }}</div>
+      {% else %}
+        <div class="mashup {{ mashup_class }}">
+          <div class="view view--{{ view }}">{{ markup }}</div>
+          {% for i in (2..slots) %}<div class="view view--{{ view }}"></div>{% endfor %}
+        </div>
+      {% endif %}
+    </div>
+    <script src="https://trmnl.com/js/{{ framework }}/plugins.js"></script>
+  </body>
+</html>

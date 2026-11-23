@@ -1,0 +1,19 @@
+{
+  "name": "trmnl-plugins",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Personal TRMNL private plugins: source code and a local preview.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "prepare": "git config core.hooksPath .githooks",
+    "dev": "vite",
+    "release": "node scripts/release.mjs"
+  },
+  "devDependencies": {
+    "liquidjs": "^10.21.1",
+    "vite": "^6.0.11"
+  }
+}

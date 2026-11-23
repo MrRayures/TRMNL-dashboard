@@ -1,0 +1,15 @@
+{
+  "user": {
+    "name": "Preview",
+    "locale": "fr",
+    "time_zone": "Europe/Paris",
+    "time_zone_iana": "Europe/Paris"
+  },
+  "device": {
+    "width": 1040,
+    "height": 780
+  },
+  "plugin_settings": {
+    "instance_name": "set from src/settings.yml name"
+  }
+}

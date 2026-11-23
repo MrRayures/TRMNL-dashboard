@@ -1,0 +1,16 @@
+/*
+ * Preview chrome only, never part of a plugin. The framework stylesheet is the
+ * source of truth for paint: nothing here may change how plugin markup looks.
+ *
+ * The panel stays at 1:1. Scaling it to fit the browser would misrepresent
+ * stroke weights and pixel-font crispness, so the page scrolls instead.
+ */
+body.environment {
+  margin: 0;
+  padding: 0;
+  background: #d9d9d9;
+  /* Anchor at the origin: centring a block wider than the viewport pushes its
+     left edge off screen. */
+  display: block;
+  width: max-content;
+}
