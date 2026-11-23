@@ -21,6 +21,10 @@ When a plugin has `src/transform.js`, the preview runs it on the fixture's
 `input` at the fixture's `now` (`?now=<ISO>` overrides it), in an isolated
 context like TRMNL's default runtime (`scripts/run-transform.mjs`).
 
+Custom fields (`custom_fields` in `src/settings.yml`) reach the markup as
+`trmnl.plugin_settings.custom_fields_values.<keyname>`: their `default`,
+then a scenario's `settings` object, then `?<keyname>=` in the URL.
+
 ## How it mimics TRMNL
 
 - `src/shared.liquid` is prepended to the view, fixture keys are top-level

@@ -56,7 +56,8 @@ polled data into flat, display-ready variables.
   `default.json` is the contract: realistic values, French text with real
   accents, realistic lengths (the longest plausible name, not "Lorem").
 - With a transform, a fixture is a **scenario** `{ "now": ISO date, "input":
-  … }`; `input` is what polling returns, inline or a path to a real API
+  …, "settings"?: { <keyname>: value } }`; `settings` sets custom field
+  values; `input` is what polling returns, inline or a path to a real API
   response saved under `fixtures/inputs/` (trimmed to the fields the
   transform reads). The README documents the transform output instead.
 - Real data beats invented data: save actual API responses, or the plugin's

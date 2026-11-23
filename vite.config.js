@@ -68,7 +68,14 @@ function readSettings(dir) {
   const file = join(dir, 'src', 'settings.yml')
   const text = existsSync(file) ? read(file) : ''
   const get = (key) => text.match(new RegExp(`^${key}:\\s*['"]?([^'"\\n]*)['"]?\\s*$`, 'm'))?.[1].trim()
-  return { name: get('name') || 'Plugin', framework: get('framework_version') || 'latest' }
+  // custom_fields: `- keyname: x` blocks; keep each field's `default` value.
+  const fields = {}
+  for (const block of text.split(/^\s*- keyname:/m).slice(1)) {
+    const keyname = block.match(/^\s*(\w+)/)?.[1]
+    const value = block.match(/^\s*default:\s*['"]?([^'"\n]*)['"]?\s*$/m)?.[1].trim()
+    if (keyname) fields[keyname] = value ?? null
+  }
+  return { name: get('name') || 'Plugin', framework: get('framework_version') || 'latest', fields }
 }
 
 function listPlugins() {
@@ -95,18 +102,19 @@ function listPlugins() {
 
 /**
  * The merge variables for a fixture. Without src/transform.js the fixture *is*
- * the payload. With one, the fixture is a scenario { now, input }: `input` is
- * what polling returns (inline, or a path under fixtures/), run through the
- * transform at time `now` (overridable with ?now=).
+ * the payload. With one, the fixture is a scenario { now, input, settings? }:
+ * `input` is what polling returns (inline, or a path under fixtures/), run
+ * through the transform at time `now` (overridable with ?now=); `settings`
+ * sets custom field values for the scenario.
  */
 function loadVariables(dir, fixtureFile, query) {
   const fixture = readJson(fixtureFile)
   const transformFile = join(dir, 'src', 'transform.js')
-  if (!existsSync(transformFile)) return fixture
+  if (!existsSync(transformFile)) return { variables: fixture, fieldValues: {} }
 
   const input = typeof fixture.input === 'string' ? readJson(join(dir, 'fixtures', fixture.input)) : fixture.input
   const now = query.get('now') || fixture.now || new Date()
-  return runTransform(read(transformFile), input, now)
+  return { variables: runTransform(read(transformFile), input, now), fieldValues: fixture.settings || {} }
 }
 
 /**
@@ -122,11 +130,16 @@ async function renderPlugin(plugin, view, query) {
   const fixtureName = query.get('fixture') || 'default'
   const fixtureFile = join(dir, 'fixtures', `${fixtureName}.json`)
   if (!existsSync(fixtureFile)) throw new Error(`Fixture not found: ${fixtureFile}`)
-  const variables = loadVariables(dir, fixtureFile, query)
+  const { variables, fieldValues } = loadVariables(dir, fixtureFile, query)
 
+  // Custom field values: settings.yml defaults, then the fixture's `settings`
+  // (transform scenarios only), then ?<keyname>= in the URL.
   const settings = readSettings(dir)
   const trmnl = readJson(join(previewDir, 'trmnl.json'))
   trmnl.plugin_settings.instance_name = settings.name
+  const values = { ...settings.fields, ...fieldValues }
+  for (const key of Object.keys(settings.fields)) if (query.has(key)) values[key] = query.get(key)
+  trmnl.plugin_settings.custom_fields_values = values
 
   const sharedFile = join(dir, 'src', 'shared.liquid')
   const shared = existsSync(sharedFile) ? read(sharedFile) + '\n' : ''
