@@ -7,6 +7,8 @@ trmnl.com.
 | Plugin | Views | Framework | Status |
 | ------ | ----- | --------- | ------ |
 | [menu](plugins/menu/) | full | 3.4.7 | in progress |
+| [bus](plugins/bus/) | full | 3.4.7 | draft |
+| [agenda](plugins/agenda/) | full | 3.4.7 | draft |
 
 ## Getting started
 

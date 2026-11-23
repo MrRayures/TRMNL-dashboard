@@ -28,7 +28,8 @@ plugins/<name>/
 
 - Folder names are lowercase kebab-case and are also the commit scope and
   release tag prefix (`menu` → `feat(menu): …` → `menu@1.2.0`).
-- Folders starting with `_` are hidden from the preview index (scratch space).
+- Folders starting with `_` are local scratch space: hidden from the preview
+  index and git-ignored (they may hold private data). Never commit them.
 - `src/` files must stay **copy-pasteable into trmnl.com unchanged**. Nothing
   preview-specific goes in `plugins/`.
 - Pin `framework_version` to an exact version, the same as on trmnl.com.

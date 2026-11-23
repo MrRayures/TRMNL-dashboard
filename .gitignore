@@ -2,3 +2,6 @@ node_modules/
 .DS_Store
 *.log
 .claude/settings.local.json
+
+# Scratch plugin folders: local only, may hold private data
+plugins/_*/
