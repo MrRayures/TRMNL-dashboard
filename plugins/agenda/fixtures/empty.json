@@ -1,0 +1,12 @@
+{
+  "week_label": "18 – 24 mai",
+  "days": [
+    { "label": "LUN", "date": "18", "today": true, "events": [] },
+    { "label": "MAR", "date": "19", "today": false, "events": [] },
+    { "label": "MER", "date": "20", "today": false, "events": [] },
+    { "label": "JEU", "date": "21", "today": false, "events": [] },
+    { "label": "VEN", "date": "22", "today": false, "events": [] },
+    { "label": "SAM", "date": "23", "today": false, "events": [] },
+    { "label": "DIM", "date": "24", "today": false, "events": [] }
+  ]
+}

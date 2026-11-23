@@ -1,0 +1,49 @@
+{% comment %}
+  Week agenda, full view: today plus the next six days, one item per day.
+  data-overflow hides trailing days rather than spilling off the panel.
+  Payload contract: see README.md and fixtures/ (week_label, days[]).
+{% endcomment %}
+<div class="layout layout--col layout--top layout--align-start">
+  {% if days.size > 0 %}
+    <div class="flex flex--col gap--small flex--left flex--top w--full" data-overflow="true" data-overflow-counter="true">
+      {% for day in days %}
+        <div class="item">
+          <div class="meta">
+            <span class="index">{{ day.date }}</span>
+          </div>
+          <div class="content">
+            {% if day.today %}
+              <span class="label label--filled label--small">{{ day.label }} · aujourd'hui</span>
+            {% else %}
+              <span class="label label--small">{{ day.label }}</span>
+            {% endif %}
+
+            {% if day.events.size > 0 %}
+              {% for event in day.events %}
+                <div class="flex flex--row gap--small">
+                  {% if event.time != blank %}
+                    <span class="value value--xxsmall value--tnums">{{ event.time }}</span>
+                  {% else %}
+                    <span class="label label--small label--outline">Journée</span>
+                  {% endif %}
+                  <span class="title title--small">{{ event.title }}</span>
+                </div>
+              {% endfor %}
+            {% else %}
+              <span class="description">Rien de prévu</span>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <span class="title">Agenda indisponible</span>
+  {% endif %}
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ trmnl.plugin_settings.instance_name }}</span>
+  {% if week_label != blank %}
+    <span class="instance">{{ week_label }}</span>
+  {% endif %}
+</div>
