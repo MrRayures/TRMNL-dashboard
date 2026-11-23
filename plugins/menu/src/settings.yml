@@ -14,5 +14,14 @@ framework_version: 3.4.7
 polling_url: https://rncuqer6baza2pzhumplpf24da0enxcg.lambda-url.eu-west-3.on.aws/satellite/ivawb/menuDay?startDate=2020-01-01&endDate=2099-12-31
 polling_headers: ''
 name: Menu du jour
-description: Menu de la cantine du jour
+description: Menu de la cantine, du jour ou de la semaine
 refresh_interval: 1440
+custom_fields:
+- keyname: display
+  field_type: select
+  name: Affichage
+  description: Menu du jour, ou les jours servis de la semaine en colonnes.
+  options:
+  - 'Menu du jour: day'
+  - 'Semaine: week'
+  default: day

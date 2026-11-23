@@ -3,7 +3,9 @@
 //
 // Input: the Meridio menuDay response for a wide date range, i.e. every
 // published day: [{ day: "2026-11-23T00:00:00.000Z", recipeList: [...] }].
-// Output: the merge variables full.liquid renders (see ../README.md).
+// Output: the merge variables full.liquid renders (see ../README.md): the day
+// to show (today, or the next served day) and the school week around it. The
+// "display" setting picks one of the two in Liquid.
 
 const DISHES = {
   entree: 'Entrée',
@@ -34,10 +36,26 @@ function parisToday(now) {
   return new Date(t + offset * 3600e3).toISOString().slice(0, 10)
 }
 
-// "2026-11-23" → "Lundi 23 novembre"
-function dayLabel(date) {
-  const d = new Date(`${date}T12:00:00Z`)
-  return `${WEEKDAYS[d.getUTCDay()]} ${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]}`
+const DAY = 86400e3
+const toDate = (iso) => new Date(`${iso}T12:00:00Z`)
+const toIso = (d) => d.toISOString().slice(0, 10)
+const dayNumber = (d) => (d.getUTCDate() === 1 ? '1er' : String(d.getUTCDate()))
+
+// "2026-11-23" → "Lundi 23 novembre", "2026-12-01" → "Mardi 1er décembre"
+function dayLabel(iso) {
+  const d = toDate(iso)
+  return `${WEEKDAYS[d.getUTCDay()]} ${dayNumber(d)} ${MONTHS[d.getUTCMonth()]}`
+}
+
+// ("2026-11-23", "2026-11-27") → "du 23 au 27 novembre";
+// across months → "du 30 novembre au 4 décembre"; a single day → "du 23 novembre".
+function rangeLabel(fromIso, toIsoDate) {
+  const a = toDate(fromIso)
+  const b = toDate(toIsoDate)
+  const month = (d) => MONTHS[d.getUTCMonth()]
+  if (fromIso === toIsoDate) return `du ${dayNumber(a)} ${month(a)}`
+  if (a.getUTCMonth() === b.getUTCMonth()) return `du ${dayNumber(a)} au ${dayNumber(b)} ${month(b)}`
+  return `du ${dayNumber(a)} ${month(a)} au ${dayNumber(b)} ${month(b)}`
 }
 
 // Compose accents (the API sends some names decomposed, "a" + U+0300, which
@@ -75,6 +93,20 @@ function item(recipe) {
   }
 }
 
+const dishRank = (dish) => (DISH_ORDER.indexOf(dish) === -1 ? DISH_ORDER.length : DISH_ORDER.indexOf(dish))
+
+// One served day: lunch in course order (stable sort keeps API order within a
+// dish), then the afternoon snack.
+function meals(recipes) {
+  return {
+    lunch: recipes
+      .filter((r) => r.meal === 'lunch')
+      .sort((a, b) => dishRank(a.dish) - dishRank(b.dish))
+      .map((r) => ({ dish: DISHES[r.dish] || cleanName(r.dish), ...item(r) })),
+    snack: recipes.filter((r) => r.meal === 'snackAfternoon').map(item),
+  }
+}
+
 function shapeMenu(days, now) {
   const today = parisToday(now)
   const served = days
@@ -84,16 +116,27 @@ function shapeMenu(days, now) {
 
   const todayMenu = served.find((d) => d.date === today)
   const shown = todayMenu || served.find((d) => d.date > today)
-  if (!shown) return { service: false, day_label: '', lunch: [], snack: [] }
+  if (!shown) return { service: false, day_label: '', lunch: [], snack: [], week_label: '', week: [] }
 
-  const rank = (dish) => (DISH_ORDER.indexOf(dish) === -1 ? DISH_ORDER.length : DISH_ORDER.indexOf(dish))
-  const lunch = shown.recipes
-    .filter((r) => r.meal === 'lunch')
-    .sort((a, b) => rank(a.dish) - rank(b.dish)) // stable: keeps API order within a dish
-    .map((r) => ({ dish: DISHES[r.dish] || cleanName(r.dish), ...item(r) }))
-  const snack = shown.recipes.filter((r) => r.meal === 'snackAfternoon').map(item)
+  // The school week (Monday to Sunday) of the shown day: on a weekend, the
+  // shown day is next Monday, so this is next week.
+  const d = toDate(shown.date)
+  const monday = toIso(new Date(d.getTime() - ((d.getUTCDay() + 6) % 7) * DAY))
+  const sunday = toIso(new Date(toDate(monday).getTime() + 6 * DAY))
+  const week = served.filter((w) => w.date >= monday && w.date <= sunday)
 
-  return { service: Boolean(todayMenu), day_label: dayLabel(shown.date), lunch, snack }
+  return {
+    service: Boolean(todayMenu),
+    day_label: dayLabel(shown.date),
+    ...meals(shown.recipes),
+    week_label: rangeLabel(week[0].date, week[week.length - 1].date),
+    week: week.map((w) => ({
+      weekday: WEEKDAYS[toDate(w.date).getUTCDay()],
+      day: dayNumber(toDate(w.date)),
+      today: w.date === today,
+      ...meals(w.recipes),
+    })),
+  }
 }
 
 function transform(input) {

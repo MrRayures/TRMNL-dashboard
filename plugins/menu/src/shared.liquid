@@ -1,7 +1,10 @@
 {% comment %}
   Partials shared by every view of the menu plugin.
   menu/badges: BIO/AOP labels, then "De saison" and "Fait maison".
-  Params: labels[], seasonal, homemade.
+    Params: labels[], seasonal, homemade.
+  menu/course: one dish. Params: course ({ dish?, name, labels, seasonal,
+    homemade }), compact (true in the week columns: no dish
+    type, badges wrap under the name).
 {% endcomment %}
 {% template menu/badges %}
   {% for tag in labels %}
@@ -12,5 +15,30 @@
   {% endif %}
   {% if homemade %}
     <span class="label label--small label--underline">Fait maison</span>
+  {% endif %}
+{% endtemplate %}
+
+{% template menu/course %}
+  {% if compact %}
+    <div class="flex flex--col flex--left gap--xsmall">
+      <span class="title">{{ course.name }}</span>
+      {% if course.labels.size > 0 or course.seasonal or course.homemade %}
+        <div class="flex flex--row flex--wrap gap--xsmall">
+          {% render "menu/badges", labels: course.labels, seasonal: course.seasonal, homemade: course.homemade %}
+        </div>
+      {% endif %}
+    </div>
+  {% else %}
+    <div class="item">
+      <div class="content">
+        {% if course.dish %}
+          <span class="description">{{ course.dish }}</span>
+        {% endif %}
+        <div class="flex flex--row gap--small">
+          <span class="title">{{ course.name }}</span>
+          {% render "menu/badges", labels: course.labels, seasonal: course.seasonal, homemade: course.homemade %}
+        </div>
+      </div>
+    </div>
   {% endif %}
 {% endtemplate %}

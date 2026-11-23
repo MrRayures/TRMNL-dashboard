@@ -64,7 +64,7 @@ test('no service today: next published menu', () => {
 })
 
 test('nothing published ahead, or empty input: empty state', () => {
-  const empty = { service: false, day_label: '', lunch: [], snack: [] }
+  const empty = { service: false, day_label: '', lunch: [], snack: [], week_label: '', week: [] }
   assert.deepEqual(run('2026-11-28T10:00:00+01:00'), empty)
   assert.deepEqual(run('2026-11-23T10:00:00+01:00', []), empty)
   assert.deepEqual(run('2026-11-23T10:00:00+01:00', {}), empty)
@@ -82,5 +82,32 @@ test('uses the Paris date, winter and summer time', () => {
   const summer = [{ day: '2026-07-01T00:00:00.000Z', recipeList: [{ name: 'x', meal: 'lunch', dish: 'entree' }] }]
   const out = run('2026-06-30T22:30:00Z', summer)
   assert.equal(out.service, true)
-  assert.equal(out.day_label, 'Mercredi 1 juillet')
+  assert.equal(out.day_label, 'Mercredi 1er juillet')
+})
+
+test('week: served days of the shown day\'s week, today flagged, date range', () => {
+  const out = run('2026-11-24T10:00:00+01:00') // Tuesday
+  assert.equal(out.week_label, 'du 23 au 27 novembre')
+  assert.deepEqual(
+    out.week.map((d) => [d.weekday, d.day, d.today]),
+    [
+      ['Lundi', '23', false],
+      ['Mardi', '24', true],
+      ['Jeudi', '26', false],
+      ['Vendredi', '27', false],
+    ],
+  )
+  assert.deepEqual(out.week[1].lunch, out.lunch) // same shape as the day view
+  assert.deepEqual(out.week[1].snack, out.snack)
+})
+
+test('week on a weekend: next week; range across months', () => {
+  const day = (iso) => ({ day: `${iso}T00:00:00.000Z`, recipeList: [{ name: 'x', meal: 'lunch', dish: 'vpo' }] })
+  const input = [day('2026-11-27'), day('2026-11-30'), day('2026-12-01'), day('2026-12-04')]
+  const out = run('2026-11-28T10:00:00+01:00', input) // Saturday
+  assert.equal(out.service, false)
+  assert.equal(out.day_label, 'Lundi 30 novembre')
+  assert.equal(out.week_label, 'du 30 novembre au 4 décembre')
+  assert.deepEqual(out.week.map((d) => d.day), ['30', '1er', '4'])
+  assert.ok(out.week.every((d) => !d.today))
 })
