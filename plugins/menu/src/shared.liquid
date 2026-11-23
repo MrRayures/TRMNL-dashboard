@@ -1,11 +1,15 @@
 {% comment %}
   Partials shared by every view of the menu plugin.
-  menu/badges: BIO/AOP labels then "Fait maison". Params: labels[], homemade.
+  menu/badges: BIO/AOP labels, then "De saison" and "Fait maison".
+  Params: labels[], seasonal, homemade.
 {% endcomment %}
 {% template menu/badges %}
   {% for tag in labels %}
     <span class="label label--small label--outline">{{ tag }}</span>
   {% endfor %}
+  {% if seasonal %}
+    <span class="label label--small label--underline">De saison</span>
+  {% endif %}
   {% if homemade %}
     <span class="label label--small label--underline">Fait maison</span>
   {% endif %}

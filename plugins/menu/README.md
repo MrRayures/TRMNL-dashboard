@@ -1,9 +1,9 @@
 # Plugin: menu
 
 Today's canteen menu (Cuisine Centrale de Saint Yrieix, Meridio): lunch
-courses and the afternoon snack, with BIO/AOP labels and a "Fait maison"
-badge. On days without service (Wednesday, weekends, holidays) it says so and
-shows the next published menu.
+courses and the afternoon snack, with BIO/AOP labels and "De saison" /
+"Fait maison" badges. On days without service (Wednesday, weekends,
+holidays) it says so and shows the next published menu.
 
 - **Views:** `full` only (v1).
 - **Framework:** pinned to 3.4.7 in `src/settings.yml`.
@@ -33,10 +33,12 @@ shows the next published menu.
 | ----------- | ------------------------------------------------------ | ----- |
 | `service`   | boolean                                                | `true` when today is served. |
 | `day_label` | string                                                 | Day of the menu shown, "Lundi 23 novembre"; `""` when none. |
-| `lunch`     | `{ dish, name, labels[], homemade }[]`                 | Entrée → Plat → Accompagnement → Laitier → Dessert; any may be missing. |
-| `snack`     | `{ name, labels[], homemade }[]`                       | Afternoon snack; may be empty. |
+| `lunch`     | `{ dish, name, labels[], seasonal, homemade }[]`       | Entrée → Plat → Accompagnement → Laitier → Dessert; any may be missing. |
+| `snack`     | `{ name, labels[], seasonal, homemade }[]`             | Afternoon snack; may be empty. |
 
 `labels`: unique ingredient labels, BIO first (`["BIO", "AOP"]`).
+`seasonal`: Meridio `seasonality` is `"A"` (the app's "de saison" tag; B, C
+and NG are not). `homemade`: Meridio `isHomeMade`.
 
 ## Fixtures
 

@@ -32,6 +32,23 @@ test('served day: lunch in course order, cleaned names, labels, homemade, snack'
   )
 })
 
+test('"de saison" only for seasonality A, like the Meridio app', () => {
+  const byName = (out) => Object.fromEntries([...out.lunch, ...out.snack].map((c) => [c.name, c.seasonal]))
+  const monday = byName(run('2026-11-23T10:00:00+01:00'))
+  assert.equal(monday['Carottes râpées'], true) // A
+  assert.equal(monday['Pommes'], true) // A
+  assert.equal(monday['Omelette'], false) // NG
+  const tuesday = byName(run('2026-11-24T10:00:00+01:00'))
+  assert.equal(tuesday['Clémentine'], true) // A
+  assert.equal(tuesday['Lasagne à la bolognaise'], false) // B
+  assert.equal(tuesday["Radis d'hiver"], false) // C
+})
+
+test('decomposed accents from the API are composed (NFC)', () => {
+  const out = run('2026-11-24T10:00:00+01:00')
+  for (const c of [...out.lunch, ...out.snack]) assert.equal(c.name, c.name.normalize('NFC'), c.name)
+})
+
 test('names are capitalised and labels ordered BIO first', () => {
   const out = run('2026-11-24T10:00:00+01:00')
   assert.equal(out.lunch[0].name, "Radis d'hiver")

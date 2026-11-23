@@ -7,6 +7,7 @@
         "meal": "lunch",
         "dish": "entree",
         "isHomeMade": true,
+        "seasonality": "A",
         "ingredientList": [
           {
             "name": "Carotte",
@@ -25,6 +26,7 @@
         "meal": "lunch",
         "dish": "vpo",
         "isHomeMade": false,
+        "seasonality": "NG",
         "ingredientList": [
           {
             "name": "Oeuf liquide",
@@ -37,6 +39,7 @@
         "meal": "lunch",
         "dish": "accompagnement",
         "isHomeMade": false,
+        "seasonality": "NG",
         "ingredientList": [
           {
             "name": "Pomme de terre",
@@ -51,6 +54,7 @@
         "meal": "lunch",
         "dish": "laitier",
         "isHomeMade": false,
+        "seasonality": "NG",
         "ingredientList": [
           {
             "name": "Fromage blanc battu",
@@ -62,6 +66,7 @@
         "name": "Gateau aux yaourt",
         "meal": "snackAfternoon",
         "isHomeMade": true,
+        "seasonality": "NG",
         "ingredientList": [
           {
             "name": "Fromage blanc",
@@ -105,6 +110,7 @@
         "name": "Pommes",
         "meal": "snackAfternoon",
         "isHomeMade": false,
+        "seasonality": "A",
         "ingredientList": [
           {
             "name": "Pomme",
@@ -124,6 +130,7 @@
         "meal": "lunch",
         "dish": "entree",
         "isHomeMade": true,
+        "seasonality": "C",
         "ingredientList": [
           {
             "name": "Ciboulette",
@@ -142,6 +149,7 @@
         "meal": "lunch",
         "dish": "vpo",
         "isHomeMade": false,
+        "seasonality": "B",
         "ingredientList": [
           {
             "name": "Viande haché",
@@ -226,6 +234,7 @@
         "meal": "lunch",
         "dish": "laitier",
         "isHomeMade": false,
+        "seasonality": "NG",
         "ingredientList": [
           {
             "name": "Saint Nectaire",
@@ -240,6 +249,7 @@
         "meal": "lunch",
         "dish": "dessert",
         "isHomeMade": false,
+        "seasonality": "NG",
         "ingredientList": [
           {
             "name": "Compote",
@@ -253,6 +263,7 @@
         "name": "Baguette viennoise barre de chocolat",
         "meal": "snackAfternoon",
         "isHomeMade": false,
+        "seasonality": "NG",
         "ingredientList": [
           {
             "name": "Baguette",
@@ -268,6 +279,7 @@
         "name": "Clémentine",
         "meal": "snackAfternoon",
         "isHomeMade": false,
+        "seasonality": "A",
         "ingredientList": [
           {
             "name": "Clémentine",
@@ -287,6 +299,7 @@
         "meal": "lunch",
         "dish": "entree",
         "isHomeMade": true,
+        "seasonality": "A",
         "ingredientList": [
           {
             "name": "Betterave rouge",
@@ -327,6 +340,7 @@
         "meal": "lunch",
         "dish": "vpo",
         "isHomeMade": true,
+        "seasonality": "A",
         "ingredientList": [
           {
             "name": "Boeuf",
@@ -359,6 +373,7 @@
         "meal": "lunch",
         "dish": "accompagnement",
         "isHomeMade": true,
+        "seasonality": "B",
         "ingredientList": [
           {
             "name": "Pomme de terre",
@@ -385,6 +400,7 @@
         "meal": "lunch",
         "dish": "dessert",
         "isHomeMade": true,
+        "seasonality": "NG",
         "ingredientList": [
           {
             "name": "Oeuf liquide",
@@ -438,6 +454,7 @@
         "name": "Quatre quart",
         "meal": "snackAfternoon",
         "isHomeMade": true,
+        "seasonality": "NG",
         "ingredientList": [
           {
             "name": "Beurre",
@@ -475,6 +492,7 @@
         "name": "verre de lait",
         "meal": "snackAfternoon",
         "isHomeMade": false,
+        "seasonality": "NG",
         "ingredientList": [
           {
             "name": "Lait demi-écrémé",
@@ -494,6 +512,7 @@
         "meal": "lunch",
         "dish": "entree",
         "isHomeMade": false,
+        "seasonality": "B",
         "ingredientList": [
           {
             "name": "Potimarron",
@@ -530,6 +549,7 @@
         "meal": "lunch",
         "dish": "vpo",
         "isHomeMade": false,
+        "seasonality": "NG",
         "ingredientList": [
           {
             "name": "Poulet",
@@ -552,6 +572,7 @@
         "meal": "lunch",
         "dish": "accompagnement",
         "isHomeMade": false,
+        "seasonality": "A",
         "ingredientList": [
           {
             "name": "Carotte",
@@ -576,6 +597,7 @@
         "meal": "lunch",
         "dish": "laitier",
         "isHomeMade": false,
+        "seasonality": "NG",
         "ingredientList": [
           {
             "name": "Camembert",
@@ -590,6 +612,7 @@
         "meal": "lunch",
         "dish": "dessert",
         "isHomeMade": false,
+        "seasonality": "C",
         "ingredientList": [
           {
             "name": "Orange",
@@ -603,6 +626,7 @@
         "name": "pain et confiture",
         "meal": "snackAfternoon",
         "isHomeMade": true,
+        "seasonality": "NG",
         "ingredientList": [
           {
             "name": "Confiture",
@@ -616,6 +640,7 @@
         "name": "Compote de fruits",
         "meal": "snackAfternoon",
         "isHomeMade": false,
+        "seasonality": "NG",
         "ingredientList": [
           {
             "name": "Compote",

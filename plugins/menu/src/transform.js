@@ -40,9 +40,17 @@ function dayLabel(date) {
   return `${WEEKDAYS[d.getUTCDay()]} ${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]}`
 }
 
-// Trim, collapse spaces, capitalise the first letter: "radis d'hiver " → "Radis d'hiver".
+// Compose accents (the API sends some names decomposed, "a" + U+0300, which
+// pixel fonts may draw badly), trim, collapse spaces, capitalise the first
+// letter: "radis d'hiver " → "Radis d'hiver".
 function cleanName(name) {
-  const s = String(name || '').trim().replace(/\s+/g, ' ')
+  let s = String(name || '')
+  try {
+    s = s.normalize('NFC')
+  } catch (e) {
+    // runtime without Unicode normalisation: keep the text as is
+  }
+  s = s.trim().replace(/\s+/g, ' ')
   return s.charAt(0).toUpperCase() + s.slice(1)
 }
 
@@ -56,8 +64,15 @@ function labelsOf(recipe) {
   return [...set].sort((a, b) => rank(a) - rank(b) || a.localeCompare(b))
 }
 
+// Meridio grades seasonality A, B, C, or NG (not graded: dairy, bakes...).
+// Its app shows the "de saison" tag on A only.
 function item(recipe) {
-  return { name: cleanName(recipe.name), labels: labelsOf(recipe), homemade: recipe.isHomeMade === true }
+  return {
+    name: cleanName(recipe.name),
+    labels: labelsOf(recipe),
+    seasonal: recipe.seasonality === 'A',
+    homemade: recipe.isHomeMade === true,
+  }
 }
 
 function shapeMenu(days, now) {

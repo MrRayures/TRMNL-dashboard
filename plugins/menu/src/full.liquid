@@ -21,7 +21,7 @@
             <span class="description">{{ course.dish }}</span>
             <div class="flex flex--row gap--small">
               <span class="title">{{ course.name }}</span>
-              {% render "menu/badges", labels: course.labels, homemade: course.homemade %}
+              {% render "menu/badges", labels: course.labels, seasonal: course.seasonal, homemade: course.homemade %}
             </div>
           </div>
         </div>
@@ -35,7 +35,7 @@
             {% for course in snack %}
               <div class="flex flex--row gap--small">
                 <span class="title">{{ course.name }}</span>
-                {% render "menu/badges", labels: course.labels, homemade: course.homemade %}
+                {% render "menu/badges", labels: course.labels, seasonal: course.seasonal, homemade: course.homemade %}
               </div>
             {% endfor %}
           </div>
