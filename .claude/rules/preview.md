@@ -14,7 +14,12 @@ unless the user asks.
 
 ```bash
 npm run dev    # http://localhost:5173 → /<plugin>/<view>?bits=1&fixture=empty
+npm test       # node --test plugins/**/tests/*.test.mjs (transforms)
 ```
+
+When a plugin has `src/transform.js`, the preview runs it on the fixture's
+`input` at the fixture's `now` (`?now=<ISO>` overrides it), in an isolated
+context like TRMNL's default runtime (`scripts/run-transform.mjs`).
 
 ## How it mimics TRMNL
 
@@ -35,7 +40,8 @@ npm run dev    # http://localhost:5173 → /<plugin>/<view>?bits=1&fixture=empty
   `number_with_delimiter`, …) are missing and throw "undefined filter".
   Prefer pre-formatted payload values; if a TRMNL filter is truly needed, add a
   shim in `vite.config.js` that mirrors its documented behaviour.
-- No transform runtime, no polling: the preview only renders fixtures.
+- No polling and no serverless runtime: the preview renders fixtures, and
+  only default-runtime transforms (`transform(input)`, plain JS).
 - After pasting into trmnl.com, check the plugin's preview there before
   considering a change done.
 

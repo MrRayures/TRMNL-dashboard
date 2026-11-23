@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { resolve, join } from 'node:path'
 import { Liquid } from 'liquidjs'
+import { runTransform } from './scripts/run-transform.mjs'
 
 // Local preview of the plugins in plugins/<name>/. It approximates what TRMNL
 // renders; TRMNL itself stays the reference (see .claude/rules/preview.md).
@@ -93,9 +94,25 @@ function listPlugins() {
 }
 
 /**
+ * The merge variables for a fixture. Without src/transform.js the fixture *is*
+ * the payload. With one, the fixture is a scenario { now, input }: `input` is
+ * what polling returns (inline, or a path under fixtures/), run through the
+ * transform at time `now` (overridable with ?now=).
+ */
+function loadVariables(dir, fixtureFile, query) {
+  const fixture = readJson(fixtureFile)
+  const transformFile = join(dir, 'src', 'transform.js')
+  if (!existsSync(transformFile)) return fixture
+
+  const input = typeof fixture.input === 'string' ? readJson(join(dir, 'fixtures', fixture.input)) : fixture.input
+  const now = query.get('now') || fixture.now || new Date()
+  return runTransform(read(transformFile), input, now)
+}
+
+/**
  * Renders plugins/<plugin>/src/<view>.liquid the way TRMNL does: shared.liquid
- * prepended, fixture keys as top-level variables, platform globals under
- * `trmnl`. The result is wrapped in the .screen/.view shell TRMNL supplies.
+ * prepended, merge variables top-level, platform globals under `trmnl`. The
+ * result is wrapped in the .screen/.view shell TRMNL supplies.
  */
 async function renderPlugin(plugin, view, query) {
   const dir = join(pluginsDir, plugin)
@@ -105,6 +122,7 @@ async function renderPlugin(plugin, view, query) {
   const fixtureName = query.get('fixture') || 'default'
   const fixtureFile = join(dir, 'fixtures', `${fixtureName}.json`)
   if (!existsSync(fixtureFile)) throw new Error(`Fixture not found: ${fixtureFile}`)
+  const variables = loadVariables(dir, fixtureFile, query)
 
   const settings = readSettings(dir)
   const trmnl = readJson(join(previewDir, 'trmnl.json'))
@@ -113,7 +131,7 @@ async function renderPlugin(plugin, view, query) {
   const sharedFile = join(dir, 'src', 'shared.liquid')
   const shared = existsSync(sharedFile) ? read(sharedFile) + '\n' : ''
   const { engine, source } = pluginEngine(shared + read(viewFile))
-  const markup = await engine.parseAndRender(source, { ...readJson(fixtureFile), trmnl })
+  const markup = await engine.parseAndRender(source, { ...variables, trmnl })
 
   return pageEngine.parseAndRender(read(join(previewDir, 'shell.liquid')), {
     plugin,
@@ -132,7 +150,9 @@ function trmnlPreview() {
       // Plugin files are not in Vite's module graph: reload explicitly.
       server.watcher.add([pluginsDir, previewDir])
       server.watcher.on('change', (file) => {
-        if (/\.(liquid|json|ya?ml)$/.test(file)) server.ws.send({ type: 'full-reload' })
+        if (/\.(liquid|json|ya?ml)$/.test(file) || file.endsWith('transform.js')) {
+          server.ws.send({ type: 'full-reload' })
+        }
       })
 
       server.middlewares.use(async (req, res, next) => {

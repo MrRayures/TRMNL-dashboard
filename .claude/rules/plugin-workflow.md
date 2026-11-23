@@ -19,9 +19,11 @@ plugins/<name>/
                            {% template %} partials live here
   src/settings.yml         plugin settings as exported by TRMNL
                            (name, strategy, framework_version, form fields)
-  src/transform.py         optional serverless transform, if the plugin uses one
-  fixtures/default.json    payload contract (required)
+  src/transform.js         optional "Transform" (default runtime, transform(input))
+  fixtures/default.json    payload, or { now, input } scenario with a transform
   fixtures/<case>.json     edge cases: at least empty.json
+  fixtures/inputs/*.json   real API responses the scenarios point to
+  tests/*.test.mjs         node --test, for the transform
   README.md                purpose, views, source, payload contract table
   CHANGELOG.md             written by `npm run release`, never by hand
 ```

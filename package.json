@@ -10,6 +10,7 @@
   "scripts": {
     "prepare": "git config core.hooksPath .githooks",
     "dev": "vite",
+    "test": "node --test \"plugins/**/tests/*.test.mjs\"",
     "release": "node scripts/release.mjs"
   },
   "devDependencies": {
