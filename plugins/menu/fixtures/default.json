@@ -1,0 +1,14 @@
+{
+  "service": true,
+  "date_label": "Lundi 18 mai",
+  "lunch": [
+    { "dish": "Entrée", "name": "Carottes râpées", "labels": ["BIO"] },
+    { "dish": "Plat", "name": "Sauté de veau marengo", "labels": [] },
+    { "dish": "Accompagnement", "name": "Semoule", "labels": [] },
+    { "dish": "Laitier", "name": "Yaourt nature", "labels": ["AOP"] },
+    { "dish": "Dessert", "name": "Compote de pommes", "labels": ["BIO"] }
+  ],
+  "snack": [
+    { "dish": "Goûter", "name": "Pain, chocolat et lait", "labels": [] }
+  ]
+}

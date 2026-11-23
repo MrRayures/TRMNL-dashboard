@@ -1,0 +1,16 @@
+# Plugin settings, in TRMNL's private-plugin export format (settings.yml).
+# Keep it in sync with the plugin on trmnl.com; the preview reads `name`
+# (title bar instance name) and `framework_version` (framework CSS/JS loaded).
+# Docs: https://help.trmnl.com/en/articles/10542599-importing-and-exporting-private-plugins
+---
+strategy: polling
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+framework_version: 3.4.7
+polling_url: ''
+polling_headers: ''
+name: Menu du jour
+description: Menu de la cantine du jour
+refresh_interval: 1440
