@@ -1,0 +1,44 @@
+{% comment %}
+  Next bus departures, full view: one item per line with its stop, the next
+  departure as a value and the following ones as labels.
+  Payload contract: see README.md and fixtures/ (updated_at, lines[]).
+{% endcomment %}
+<div class="layout layout--col layout--top layout--align-start">
+  {% if lines.size > 0 %}
+    <div class="flex flex--col gap--medium flex--left flex--top w--full" data-overflow="true">
+      {% for line in lines %}
+        <div class="item">
+          <div class="meta">
+            <span class="index">{{ line.number }}</span>
+          </div>
+          <div class="content">
+            <span class="title">{{ line.headsign }}</span>
+            <span class="description">Arrêt {{ line.stop }}</span>
+            {% if line.departures.size > 0 %}
+              <div class="flex flex--row gap--small">
+                {% for time in line.departures limit: 3 %}
+                  {% if forloop.first %}
+                    <span class="value value--small value--tnums">{{ time }}</span>
+                  {% else %}
+                    <span class="label label--small label--gray-out">{{ time }}</span>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            {% else %}
+              <span class="label label--small label--gray-out">Plus de passage aujourd'hui</span>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <span class="title">Aucun passage prévu</span>
+  {% endif %}
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ trmnl.plugin_settings.instance_name }}</span>
+  {% if updated_at != blank %}
+    <span class="instance">Mis à jour {{ updated_at }}</span>
+  {% endif %}
+</div>

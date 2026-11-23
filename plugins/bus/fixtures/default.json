@@ -1,0 +1,17 @@
+{
+  "updated_at": "08:04",
+  "lines": [
+    {
+      "number": "9",
+      "headsign": "St Michel Puygrelier Pkg",
+      "stop": "Transformateur",
+      "departures": ["08:12", "08:42", "09:12"]
+    },
+    {
+      "number": "3",
+      "headsign": "Magnac Mairie",
+      "stop": "Nautilis",
+      "departures": ["08:19", "08:49", "09:19"]
+    }
+  ]
+}
