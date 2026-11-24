@@ -5,6 +5,9 @@
   menu/course: one dish. Params: course ({ dish?, name, labels, seasonal,
     homemade }), compact (true in the week columns: no dish
     type, badges wrap under the name).
+  menu/meal: one meal (lunch or snack) as an item: optional heading, then
+    its dishes. Params: title (e.g. "Goûter", may be blank), courses[],
+    compact.
   menu/title_bar: fork and knife icon, title on the left, date on the right.
     Params: title, date. The icon is an inline SVG: nothing to host.
 {% endcomment %}
@@ -22,10 +25,10 @@
     <span class="label label--small label--outline">{{ tag }}</span>
   {% endfor %}
   {% if seasonal %}
-    <span class="label label--small label--underline">De saison</span>
+    <span class="label label--small label--outline">De saison</span>
   {% endif %}
   {% if homemade %}
-    <span class="label label--small label--underline">Fait maison</span>
+    <span class="label label--small label--outline">Fait maison</span>
   {% endif %}
 {% endtemplate %}
 
@@ -34,7 +37,7 @@
     <div class="flex flex--col flex--left gap--xsmall">
       <span class="title">{{ course.name }}</span>
       {% if course.labels.size > 0 or course.seasonal or course.homemade %}
-        <div class="flex flex--row flex--wrap gap--xsmall">
+        <div class="flex flex--row flex--wrap flex--left gap--xsmall">
           {% render "menu/badges", labels: course.labels, seasonal: course.seasonal, homemade: course.homemade %}
         </div>
       {% endif %}
@@ -52,4 +55,18 @@
       </div>
     </div>
   {% endif %}
+{% endtemplate %}
+
+{% template menu/meal %}
+  <div class="item w--full">
+    <div class="meta"></div>
+    <div class="content gap--small">
+      {% if title != blank %}
+        <span class="description">{{ title }}</span>
+      {% endif %}
+      {% for course in courses %}
+        {% render "menu/course", course: course, compact: compact %}
+      {% endfor %}
+    </div>
+  </div>
 {% endtemplate %}
