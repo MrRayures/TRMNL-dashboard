@@ -1,8 +1,9 @@
 // TRMNL transform, default runtime (plain JS: no network, no Intl, 1 s max).
 // Paste into the plugin's "Transform" editor on trmnl.com.
 //
-// Input: the Meridio menuDay response for a wide date range, i.e. every
-// published day: [{ day: "2026-11-23T00:00:00.000Z", recipeList: [...] }].
+// Input: every published Meridio menu day, as synced weekly to our menu.json
+// (scripts/sync/menu.mjs) or straight from the API:
+// [{ day: "2026-11-23T00:00:00.000Z", recipeList: [...] }].
 // Output: the merge variables full.liquid renders (see ../README.md): the day
 // to show (today, or the next served day) and the school week around it. The
 // "display" setting picks one of the two in Liquid.
