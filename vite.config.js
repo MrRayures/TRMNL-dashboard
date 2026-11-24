@@ -156,6 +156,49 @@ async function renderPlugin(plugin, view, query) {
   })
 }
 
+const VIEW_TITLES = {
+  full: 'Full View',
+  half_horizontal: 'Half Horizontal',
+  half_vertical: 'Half Vertical',
+  quadrant: 'Quadrant',
+}
+
+/**
+ * The home page (/) and /<plugin>: every view of the plugin as a card
+ * (iframes of the 1:1 pages, shrunk for the overview), with plugin, fixture
+ * and bit-depth pickers. At / no plugin is picked: nothing shows until one
+ * is chosen. Other query params (custom fields such as ?display=week) are
+ * passed through.
+ */
+async function renderGallery(plugin, query) {
+  const plugins = listPlugins()
+  const p = plugin ? plugins.find((x) => x.name === plugin) : null
+  if (plugin && !p) return null
+  const bits = BITS[query.get('bits')] ? query.get('bits') : '4'
+  const bit_options = [['4', '4 bits (16 gris)'], ['2', '2 bits (4 gris)'], ['1', '1 bit (noir et blanc)']]
+  const template = read(join(previewDir, 'gallery.liquid'))
+  if (!p) return pageEngine.parseAndRender(template, { p: null, plugins, bits, bit_options, extra: [], views: [] })
+  // fixture=all: one card per fixture, smaller.
+  const all = query.get('fixture') === 'all'
+  const fixture = all ? 'all' : p.fixtures.includes(query.get('fixture')) ? query.get('fixture') : 'default'
+  const extra = [...query].filter(([k]) => k !== 'fixture' && k !== 'bits' && k !== 'scale')
+  const url = (v, f) => `/${plugin}/${v}?${new URLSearchParams([['fixture', f], ['bits', bits], ...extra])}`
+  return pageEngine.parseAndRender(template, {
+    p,
+    plugins,
+    fixture,
+    bits,
+    extra,
+    scale: Number(query.get('scale')) || (all ? 0.25 : 0.4),
+    bit_options,
+    views: p.views.map((v) => ({
+      name: v,
+      title: VIEW_TITLES[v],
+      cards: (all ? p.fixtures : [fixture]).map((f) => ({ fixture: f, url: url(v, f) })),
+    })),
+  })
+}
+
 function trmnlPreview() {
   return {
     name: 'trmnl-preview',
@@ -174,9 +217,9 @@ function trmnlPreview() {
         try {
           let html = null
           if (parts.length === 0) {
-            html = await pageEngine.parseAndRender(read(join(previewDir, 'index.liquid')), {
-              plugins: listPlugins(),
-            })
+            html = await renderGallery(null, url.searchParams)
+          } else if (parts.length === 1 && existsSync(join(pluginsDir, parts[0]))) {
+            html = await renderGallery(parts[0], url.searchParams)
           } else if (parts.length === 2 && existsSync(join(pluginsDir, parts[0]))) {
             html = await renderPlugin(parts[0], parts[1], url.searchParams)
           }

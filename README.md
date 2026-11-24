@@ -49,7 +49,7 @@ plugins/<name>/
   fixtures/            sample data: default.json, empty.json, ...
   README.md            payload contract
   CHANGELOG.md         written by the release script
-preview/               preview shell, index page, trmnl.* globals
+preview/               preview shell, gallery (home page), trmnl.* globals
 scripts/               release + commit-msg check
 docs/                  framework notes, original spec and plan
 .claude/               project rules and Claude Code settings

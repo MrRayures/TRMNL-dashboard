@@ -13,13 +13,21 @@ nothing else. No Docker, Ruby, trmnlp, CI deploy or vendored framework files
 unless the user asks.
 
 ```bash
-npm run dev    # http://localhost:5173 → /<plugin>/<view>?bits=1&fixture=empty
+npm run dev    # http://localhost:5173 → /<plugin> (gallery) or /<plugin>/<view>?bits=1&fixture=empty
 npm test       # node --test plugins/**/tests/*.test.mjs (transforms)
 ```
 
 When a plugin has `src/transform.js`, the preview runs it on the fixture's
 `input` at the fixture's `now` (`?now=<ISO>` overrides it), in an isolated
 context like TRMNL's default runtime (`scripts/run-transform.mjs`).
+
+The home page `/` and `/<plugin>` are the gallery, like trmnl.com's
+framework examples: every view as a card, a plugin picker, a fixture picker
+(`toutes` = one card per fixture) and a bit-depth picker. At `/` the plugin
+picker is empty and nothing shows until a plugin is chosen. Other query
+params (custom fields) pass through. Cards are
+iframes of the 1:1 pages, shrunk for the overview only (`?scale=`); click one
+to check it at 1:1.
 
 Custom fields (`custom_fields` in `src/settings.yml`) reach the markup as
 `trmnl.plugin_settings.custom_fields_values.<keyname>`: their `default`,
@@ -53,6 +61,7 @@ then a scenario's `settings` object, then `?<keyname>=` in the URL.
 
 - `preview/preview.css` is page chrome only. **Never** add rules that change
   how plugin markup paints: a fix that only works here is a bug on the device.
-- Keep the panel at 1:1; do not scale it to fit the browser.
+- Keep the panel at 1:1 on `/<plugin>/<view>`; only the gallery shrinks it,
+  as an overview. Judge strokes, dithering and fit at 1:1.
 - Prefer a reload with a query param over toggling classes in the console:
   the framework runtime only measures on load.
