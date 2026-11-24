@@ -64,10 +64,11 @@ test('no service today: next published menu', () => {
 })
 
 test('nothing published ahead, or empty input: empty state', () => {
-  const empty = { service: false, day_label: '', lunch: [], snack: [], week_label: '', week: [] }
-  assert.deepEqual(run('2026-11-28T10:00:00+01:00'), empty)
-  assert.deepEqual(run('2026-11-23T10:00:00+01:00', []), empty)
-  assert.deepEqual(run('2026-11-23T10:00:00+01:00', {}), empty)
+  const empty = (today_label) => ({ service: false, today_label, day_label: '', lunch: [], snack: [], week_label: '', week: [] })
+  assert.deepEqual(run('2026-11-28T10:00:00+01:00'), empty('28 novembre 2026'))
+  assert.deepEqual(run('2026-11-23T10:00:00+01:00', []), empty('23 novembre 2026'))
+  assert.deepEqual(run('2026-11-23T10:00:00+01:00', {}), empty('23 novembre 2026'))
+  assert.equal(run('2026-12-01T10:00:00+01:00', []).today_label, '1er décembre 2026')
 })
 
 test('accepts the array wrapped under `data`', () => {
