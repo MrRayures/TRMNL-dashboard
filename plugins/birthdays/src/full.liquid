@@ -1,0 +1,49 @@
+{% comment %}
+  Birthdays, full view: two columns, top-aligned. Left third, centred: icon,
+  today's greeting and age (or "Pas d'anniversaire aujourd'hui"). Right two
+  thirds: the next ones as items (countdown, date, age).
+  Merge variables come from transform.js: available, today_label, today[],
+  upcoming[] (see README.md).
+{% endcomment %}
+<div class="layout layout--col layout--top">
+  {% assign all = today | concat: upcoming %}
+  {% if available == false %}
+    <div class="flex flex--col flex--left w--full">
+      <span class="title">Agenda indisponible</span>
+      <span class="description">Vérifie l'adresse iCal dans les réglages du plugin</span>
+      {% if received != blank %}
+        <span class="description">Reçu : {{ received }}</span>
+      {% endif %}
+    </div>
+
+  {% elsif all.size > 0 %}
+    {% comment %} The first of today's birthdays on the left; the others in the list. {% endcomment %}
+    {% assign skip = 0 %}
+    {% if today.size > 0 %}{% assign skip = 1 %}{% endif %}
+    <div class="grid grid--cols-3 gap--large w--full h--full">
+      <div class="flex flex--col flex--center gap bg--gray-75 rounded--large p--6">
+        {% if today.size > 0 %}
+          {% render "birthdays/icon", class: "w--24 h--24 image--adaptive", wedding: today.first.wedding %}
+          {% render "birthdays/hero", b: today.first %}
+        {% else %}
+          {% render "birthdays/icon", class: "w--24 h--24 image--adaptive" %}
+          <span class="title text--center">Pas d'anniversaire aujourd'hui</span>
+        {% endif %}
+      </div>
+
+      <div class="col--span-2 flex flex--col flex--left flex--center-y gap--medium" data-overflow="true">
+        {% for b in all offset: skip %}
+          {% render "birthdays/item", b: b %}
+        {% endfor %}
+      </div>
+    </div>
+
+  {% else %}
+    <div class="flex flex--col flex--left w--full">
+      <span class="title">Aucun anniversaire</span>
+      <span class="description">Ajoute des événements dans l'agenda Anniversaires</span>
+    </div>
+  {% endif %}
+</div>
+
+{% render "birthdays/title_bar", title: trmnl.plugin_settings.instance_name, date: today_label %}

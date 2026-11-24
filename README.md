@@ -9,6 +9,7 @@ trmnl.com.
 | [menu](plugins/menu/) | full | 3.4.7 | ready to deploy |
 | [bus](plugins/bus/) | full | 3.4.7 | draft |
 | [agenda](plugins/agenda/) | full | 3.4.7 | draft |
+| [birthdays](plugins/birthdays/) | full | 3.4.7 | in progress |
 
 ## Getting started
 
