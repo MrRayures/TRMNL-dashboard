@@ -103,7 +103,8 @@ function listPlugins() {
 /**
  * The merge variables for a fixture. Without src/transform.js the fixture *is*
  * the payload. With one, the fixture is a scenario { now, input, settings? }:
- * `input` is what polling returns (inline, or a path under fixtures/), run
+ * `input` is what polling returns (inline, or a path under fixtures/: JSON
+ * parsed, other files as text), run
  * through the transform at time `now` (overridable with ?now=); `settings`
  * sets custom field values for the scenario.
  */
@@ -112,7 +113,11 @@ function loadVariables(dir, fixtureFile, query) {
   const transformFile = join(dir, 'src', 'transform.js')
   if (!existsSync(transformFile)) return { variables: fixture, fieldValues: {} }
 
-  const input = typeof fixture.input === 'string' ? readJson(join(dir, 'fixtures', fixture.input)) : fixture.input
+  // A one-line string is a path: .json files are parsed, anything else (.ics,
+  // .xml…) is passed as text. A multi-line string is inline text input.
+  const isPath = typeof fixture.input === 'string' && !fixture.input.includes('\n')
+  const inputFile = isPath ? join(dir, 'fixtures', fixture.input) : null
+  const input = inputFile ? (inputFile.endsWith('.json') ? readJson(inputFile) : read(inputFile)) : fixture.input
   const now = query.get('now') || fixture.now || new Date()
   return { variables: runTransform(read(transformFile), input, now), fieldValues: fixture.settings || {} }
 }
