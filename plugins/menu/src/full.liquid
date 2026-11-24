@@ -2,7 +2,8 @@
   Canteen menu, full view. The "display" custom field picks the layout:
   - day (default): the day's lunch and snack, its date as heading; on days
     without service, a notice and the next published menu.
-  - week: one column per served day of the school week, today highlighted.
+  - week: one column per served day of the school week,
+    today's column on a light background.
   Footer, both layouts: "Menu du 23 au 27 novembre".
   Merge variables come from transform.js (see README.md).
 {% endcomment %}
@@ -10,19 +11,17 @@
 
 <div class="layout layout--col layout--top">
   {% if display == "week" and week.size > 0 %}
-    <div class="grid grid--cols-{{ week.size }} gap--large w--full">
+    {% comment %} Equal columns (grow + basis--0); today's on a light background. {% endcomment %}
+    <div class="flex flex--row flex--stretch-y gap w--full h--full">
       {% for day in week %}
-        <div class="flex flex--col gap--small flex--left flex--top" data-overflow="true">
-          <span class="label {% if day.today %}label--filled{% else %}label--outline{% endif %}">{{ day.weekday }} {{ day.day }}</span>
-          {% for course in day.lunch %}
-            {% render "menu/course", course: course, compact: true %}
-          {% endfor %}
+        <div class="flex flex--col gap--small flex--left flex--top grow basis--0 p--4 rounded--large{% if day.today %} bg--gray-75{% endif %}" data-overflow="true">
+          <span class="title title--small font--bold">{{ day.weekday }} {{ day.day }}</span>
+          {% if day.lunch.size > 0 %}
+            {% render "menu/meal", title: "Déjeuner", courses: day.lunch, compact: true %}
+          {% endif %}
           {% if day.snack.size > 0 %}
-            <hr class="border--h-10 w--full" />
-            <span class="description">Goûter</span>
-            {% for course in day.snack %}
-              {% render "menu/course", course: course, compact: true %}
-            {% endfor %}
+            <hr class="border--h-75 w--full" />
+            {% render "menu/meal", title: "Goûter", courses: day.snack, compact: true %}
           {% endif %}
         </div>
       {% endfor %}
@@ -38,16 +37,13 @@
       </div>
       <hr class="border--h-10 w--full" />
 
-      {% for course in lunch %}
-        {% render "menu/course", course: course %}
-      {% endfor %}
+      {% if lunch.size > 0 %}
+        {% render "menu/meal", title: "Déjeuner", courses: lunch %}
+      {% endif %}
 
       {% if snack.size > 0 %}
-        <hr class="border--h-10 w--full" />
-        <span class="description">Goûter</span>
-        {% for course in snack %}
-          {% render "menu/course", course: course %}
-        {% endfor %}
+        <hr class="border--h-75 w--full" />
+        {% render "menu/meal", title: "Goûter", courses: snack %}
       {% endif %}
     </div>
 

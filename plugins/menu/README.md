@@ -71,8 +71,11 @@ Layouts, picked by the `display` custom field:
 
 - `day` (default): today's menu under its date. On days without service
   (Wednesday, weekends, holidays) a notice and the next published menu.
-- `week`: one column per served day of the school week, today highlighted;
-  on a weekend, next week.
+- `week`: one column per served day of the school week,
+  today's column on a light background; on a weekend, next week.
+
+In both, lunch ("Déjeuner") and snack ("Goûter") are each an `item`
+(partial `menu/meal`), split by a `border--h-75` rule.
 
 Both end with a full-width footer, "Menu du 23 au 27 novembre".
 
@@ -123,7 +126,7 @@ and NG are not). `homemade`: Meridio `isHomeMade`.
 | `no-service` | Wednesday 25            | Notice + Thursday's menu |
 | `no-menu`    | Saturday 28 (data ends) | Notice, nothing published |
 | `empty`      | API returned `[]`       | Notice, nothing published |
-| `week`       | Tuesday 24, `display: week` | 4 columns, Tuesday highlighted |
+| `week`       | Tuesday 24, `display: week` | 4 columns |
 | `week-no-menu` | Saturday 28, `display: week` | Notice, nothing published |
 
 A scenario's optional `settings` sets custom field values
