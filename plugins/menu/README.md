@@ -16,7 +16,7 @@ les champs ci-dessous. Ceux qui ne sont pas listés restent tels quels.
 | **Polling Verb** | `GET` |
 | **Polling Headers** | vide |
 | **Polling Body** | vide |
-| **Form Fields** | le bloc ci-dessous |
+| **Form Fields** | le bloc ci-dessous (`npm run copy -- menu fields`) |
 | **Allow self-signed certificate** | désactivé |
 | **Enable OAuth Authentication?** | désactivé |
 | **Fastest refresh rate** | vide |
@@ -38,21 +38,26 @@ https://mrrayures.github.io/TRMNL-dashboard/menu.json
   name: Affichage
   description: Menu du jour, ou les jours servis de la semaine en colonnes.
   options:
-  - 'Menu du jour: day'
-  - 'Semaine: week'
+  - 'Menu du jour': day
+  - 'Semaine': week
   default: day
 ```
 
 Clique sur **Enregistrer**, puis sur **Modifier le balisage** et colle chaque
 fichier dans son onglet :
 
-| Onglet | Fichier à copier |
-| ------ | ---------------- |
-| **Shared** | [`src/shared.liquid`](src/shared.liquid) |
-| **Full** | [`src/full.liquid`](src/full.liquid) |
-| **Transform** | [`src/transform.js`](src/transform.js) |
+Pour copier un fichier, lance sa commande dans le terminal du projet, puis
+colle (Ctrl+V) dans l'onglet :
 
-Enregistre. La prévisualisation doit montrer le menu du jour.
+| Onglet (en bas) | Commande pour copier |
+| ------ | -------------------- |
+| **Code**, avec **Full** sélectionné en haut | `npm run copy -- menu full` |
+| **Shared** | `npm run copy -- menu shared` |
+| **Serverless**, langage **Node** | `npm run copy -- menu serverless` |
+
+Clique sur **Save**. La prévisualisation doit montrer le menu du jour. Si
+elle affiche « Aucun menu publié », clique sur **Variables** et vérifie que
+`lunch` et `week` y figurent.
 
 **Changer d'affichage** : dans les réglages du plugin, champ **Affichage** →
 `Menu du jour` ou `Semaine`.

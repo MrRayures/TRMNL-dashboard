@@ -22,6 +22,6 @@ custom_fields:
   name: Affichage
   description: Menu du jour, ou les jours servis de la semaine en colonnes.
   options:
-  - 'Menu du jour: day'
-  - 'Semaine: week'
+  - 'Menu du jour': day
+  - 'Semaine': week
   default: day
