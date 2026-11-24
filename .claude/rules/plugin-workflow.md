@@ -24,7 +24,8 @@ plugins/<name>/
   fixtures/<case>.json     edge cases: at least empty.json
   fixtures/inputs/*.json   real API responses the scenarios point to
   tests/*.test.mjs         node --test, for the transform
-  README.md                purpose, views, source, payload contract table
+  README.md                "Installer sur TRMNL" guide first, then the
+                           technical part (views, source, payload table)
   CHANGELOG.md             written by `npm run release`, never by hand
 ```
 
@@ -45,6 +46,30 @@ plugins/<name>/
 - A new plugin starts with its payload contract: `fixtures/default.json` and
   the README table, then the markup.
 
+## README: install guide first
+
+Every plugin README opens with a one-line French description, then
+**`## Installer sur TRMNL`**: a non-technical guide the user follows on
+trmnl.com, in French, with no explanation the user does not need.
+
+- Follow the **Add Private Plugin** screen in its order, with its exact
+  labels: Nom, Strategy, Polling URL(s), Polling Verb, Polling Headers,
+  Polling Body, Form Fields, Allow self-signed certificate, Enable OAuth
+  Authentication?, Fastest refresh rate, Remove bleed margin?, Enable Dark
+  Mode?, Framework CSS version. One table row per field, with the value to
+  enter ("vide" / "désactivé" when untouched).
+- Long values (URL, Form Fields YAML) go in their own copy-paste code block,
+  identical to `src/settings.yml`.
+- Then **Enregistrer → Modifier le balisage**: a table "Onglet → fichier"
+  (Shared, Full, other views, Transform), linking to the `src/` files.
+- End with how to change each setting and how to update after a release.
+- Never put secrets in it: for a private value, say which field to fill
+  and where to find the value, not the value.
+- Anything technical (data source, preview, tests, payload table) goes after,
+  under `## Development`, in English.
+- Keep it in sync: a change to `src/settings.yml` or to the views updates
+  this guide in the same commit.
+
 ## Definition of done for a view
 
 1. Renders in the preview with every fixture, no Liquid error.
@@ -53,5 +78,6 @@ plugins/<name>/
    `data-overflow="true"` or are limited in Liquid.
 4. The empty / unavailable case shows a short French message, never a blank
    panel.
-5. README payload table matches the fixtures.
+5. README payload table matches the fixtures, and its install guide matches
+   `src/settings.yml`.
 6. After deployment, the user checks it on trmnl.com (the reference renderer).
