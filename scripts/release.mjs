@@ -3,7 +3,7 @@
 //
 //   npm run release -- <plugin> [patch|minor|major] [--dry-run]
 import { execFileSync } from 'node:child_process'
-import { existsSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { RELEASE_BUMP, parseCommit } from './commit-conventions.mjs'
 
@@ -98,8 +98,24 @@ run('git', ['tag', '-a', tag, '-m', tag])
 run('git', ['push', 'origin', 'main', tag])
 run('gh', ['release', 'create', tag, '--title', tag, '--notes', notes || 'No user-facing changes.'])
 
+// What to paste on trmnl.com: one line per file in src/, with its copy command.
+const TABS = {
+  'full.liquid': 'Code, Full',
+  'half_horizontal.liquid': 'Code, Half H',
+  'half_vertical.liquid': 'Code, Half V',
+  'quadrant.liquid': 'Code, Quadrant',
+  'shared.liquid': 'Shared',
+  'transform.js': 'Serverless (Node)',
+  'settings.yml': 'Form Fields',
+}
+const PARTS = { 'transform.js': 'serverless', 'settings.yml': 'fields' }
+const steps = readdirSync(join(dir, 'src'))
+  .filter((f) => TABS[f])
+  .map((f) => `  ${TABS[f].padEnd(18)} npm run copy -- ${plugin} ${PARTS[f] || f.replace('.liquid', '')}`)
+
 console.log(
   dryRun
     ? '\n(dry run: nothing written or pushed)'
-    : `\n✔ Released ${tag}. Now paste ${dir}/src/*.liquid into the plugin on trmnl.com.`,
+    : `\n✔ Released ${tag}. Update the plugin on trmnl.com, then Save:\n${steps.join('\n')}\n` +
+        `(only what changed: see ${dir}/CHANGELOG.md)`,
 )
