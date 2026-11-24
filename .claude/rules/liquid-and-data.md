@@ -35,12 +35,33 @@ that behaves the same on both:
 - Guard every optional key. A missing key must degrade to the empty state,
   never to broken markup or leaked `{{ }}`.
 
+## Transforms
+
+Prefer a transform over complex Liquid (TRMNL's own guidance): it reshapes the
+polled data into flat, display-ready variables.
+
+- `src/transform.js`, **default runtime**: `function transform(input)`, plain
+  JS only (no network, no `require`, no `Intl`, 1 s). Pasted as-is on
+  trmnl.com.
+- Pure and deterministic given `input` and the current date; read the time
+  with `new Date()` only, so tests and the preview can freeze it.
+- Never return `{}`: return a complete object with empty defaults so the
+  template always has its keys.
+- Covered by `tests/*.test.mjs` (`node --test`, via
+  `scripts/run-transform.mjs`) against real API data.
+
 ## Fixtures
 
-- `fixtures/default.json` is the contract: realistic values, French text with
-  real accents, realistic lengths (the longest plausible name, not "Lorem").
-  When the plugin runs on TRMNL, its real merge variables (plugin settings →
-  merge variables) are the best source for this file.
+- Without a transform, `fixtures/<name>.json` **is** the payload, and
+  `default.json` is the contract: realistic values, French text with real
+  accents, realistic lengths (the longest plausible name, not "Lorem").
+- With a transform, a fixture is a **scenario** `{ "now": ISO date, "input":
+  …, "settings"?: { <keyname>: value } }`; `settings` sets custom field
+  values; `input` is what polling returns, inline or a path to a real API
+  response saved under `fixtures/inputs/` (trimmed to the fields the
+  transform reads). The README documents the transform output instead.
+- Real data beats invented data: save actual API responses, or the plugin's
+  merge variables from trmnl.com once it runs there.
 - One fixture per edge case the markup branches on: always `empty.json`; also
   `long.json` (overflow) or `error.json` when relevant.
 - A payload shape change updates the fixtures and the README table together.

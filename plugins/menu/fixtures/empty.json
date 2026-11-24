@@ -1,6 +1,5 @@
 {
-  "service": false,
-  "date_label": "Samedi 23 mai",
-  "lunch": [],
-  "snack": []
+  "_comment": "API returned no day at all.",
+  "now": "2026-11-23T10:00:00+01:00",
+  "input": []
 }

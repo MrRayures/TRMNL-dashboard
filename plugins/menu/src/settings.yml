@@ -9,8 +9,19 @@ dark_mode: 'no'
 static_data: ''
 polling_verb: get
 framework_version: 3.4.7
-polling_url: ''
+# Our copy of every published Meridio menu, refreshed each Monday by
+# .github/workflows/sync-data.yml; transform.js picks today (Europe/Paris).
+polling_url: https://mrrayures.github.io/TRMNL-dashboard/menu.json
 polling_headers: ''
-name: Menu du jour
-description: Menu de la cantine du jour
+name: Menu cantine
+description: Menu de la cantine, du jour ou de la semaine
 refresh_interval: 1440
+custom_fields:
+- keyname: display
+  field_type: select
+  name: Affichage
+  description: Menu du jour, ou les jours servis de la semaine en colonnes.
+  options:
+  - 'Menu du jour: day'
+  - 'Semaine: week'
+  default: day

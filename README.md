@@ -6,7 +6,7 @@ trmnl.com.
 
 | Plugin | Views | Framework | Status |
 | ------ | ----- | --------- | ------ |
-| [menu](plugins/menu/) | full | 3.4.7 | in progress |
+| [menu](plugins/menu/) | full | 3.4.7 | ready to deploy |
 | [bus](plugins/bus/) | full | 3.4.7 | draft |
 | [agenda](plugins/agenda/) | full | 3.4.7 | draft |
 
@@ -18,6 +18,7 @@ Requires Node 20+ (`.nvmrc` pins 24). Two dev dependencies: `vite` and
 ```bash
 npm install      # also installs the commit-msg hook
 npm run dev      # http://localhost:5173
+npm test         # transform tests (node --test, no extra dependency)
 ```
 
 The index lists every plugin, view and fixture. A view is at

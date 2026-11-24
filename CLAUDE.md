@@ -3,11 +3,13 @@
 Private plugins for a TRMNL X (e-ink, 1040x780 CSS px, 4-bit), built **one
 plugin at a time** in `plugins/<name>/`. This repo only **hosts the code and
 previews it locally**; the user deploys each plugin by hand on trmnl.com.
-Keep it simple: Node + vite + liquidjs, no Docker/Ruby/CI unless asked.
+Keep it simple: Node + vite + liquidjs, no Docker/Ruby/CI unless asked. One
+scheduled workflow syncs public plugin data (`.claude/rules/data-hosting.md`).
 
 ```bash
 npm install                        # deps + commit-msg hook
 npm run dev                        # http://localhost:5173 → /menu/full?bits=1&fixture=empty
+npm test                           # transform tests (node --test)
 npm run release -- menu --dry-run  # version + changelog + tag, then deploy by hand
 ```
 

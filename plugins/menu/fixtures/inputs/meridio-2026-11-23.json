@@ -1,0 +1,655 @@
+[
+  {
+    "day": "2026-11-23T00:00:00.000Z",
+    "recipeList": [
+      {
+        "name": "Carottes râpées",
+        "meal": "lunch",
+        "dish": "entree",
+        "isHomeMade": true,
+        "seasonality": "A",
+        "ingredientList": [
+          {
+            "name": "Carotte",
+            "labelList": [
+              "BIO"
+            ]
+          },
+          {
+            "name": "Persil",
+            "labelList": []
+          }
+        ]
+      },
+      {
+        "name": "Omelette ",
+        "meal": "lunch",
+        "dish": "vpo",
+        "isHomeMade": false,
+        "seasonality": "NG",
+        "ingredientList": [
+          {
+            "name": "Oeuf liquide",
+            "labelList": []
+          }
+        ]
+      },
+      {
+        "name": "Pommes de terres rissolées",
+        "meal": "lunch",
+        "dish": "accompagnement",
+        "isHomeMade": false,
+        "seasonality": "NG",
+        "ingredientList": [
+          {
+            "name": "Pomme de terre",
+            "labelList": [
+              "BIO"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Fromage blanc fermier",
+        "meal": "lunch",
+        "dish": "laitier",
+        "isHomeMade": false,
+        "seasonality": "NG",
+        "ingredientList": [
+          {
+            "name": "Fromage blanc battu",
+            "labelList": []
+          }
+        ]
+      },
+      {
+        "name": "Gateau aux yaourt",
+        "meal": "snackAfternoon",
+        "isHomeMade": true,
+        "seasonality": "NG",
+        "ingredientList": [
+          {
+            "name": "Fromage blanc",
+            "labelList": [
+              "BIO"
+            ]
+          },
+          {
+            "name": "Farine de blé",
+            "labelList": [
+              "BIO"
+            ]
+          },
+          {
+            "name": "Sucre",
+            "labelList": [
+              "BIO"
+            ]
+          },
+          {
+            "name": "Huile",
+            "labelList": [
+              "BIO"
+            ]
+          },
+          {
+            "name": "Extrait de vanille",
+            "labelList": []
+          },
+          {
+            "name": "Levure",
+            "labelList": []
+          },
+          {
+            "name": "Oeuf liquide",
+            "labelList": []
+          }
+        ]
+      },
+      {
+        "name": "Pommes",
+        "meal": "snackAfternoon",
+        "isHomeMade": false,
+        "seasonality": "A",
+        "ingredientList": [
+          {
+            "name": "Pomme",
+            "labelList": [
+              "BIO"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "day": "2026-11-24T00:00:00.000Z",
+    "recipeList": [
+      {
+        "name": "radis d'hiver",
+        "meal": "lunch",
+        "dish": "entree",
+        "isHomeMade": true,
+        "seasonality": "C",
+        "ingredientList": [
+          {
+            "name": "Ciboulette",
+            "labelList": []
+          },
+          {
+            "name": "Radis",
+            "labelList": [
+              "BIO"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Lasagne à la bolognaise",
+        "meal": "lunch",
+        "dish": "vpo",
+        "isHomeMade": false,
+        "seasonality": "B",
+        "ingredientList": [
+          {
+            "name": "Viande haché",
+            "labelList": [
+              "BIO"
+            ]
+          },
+          {
+            "name": "Lasagnes",
+            "labelList": [
+              "BIO"
+            ]
+          },
+          {
+            "name": "Oignon",
+            "labelList": [
+              "BIO"
+            ]
+          },
+          {
+            "name": "Ail",
+            "labelList": []
+          },
+          {
+            "name": "Purée",
+            "labelList": [
+              "BIO"
+            ]
+          },
+          {
+            "name": "Tomate",
+            "labelList": [
+              "BIO"
+            ]
+          },
+          {
+            "name": "Huile",
+            "labelList": [
+              "BIO"
+            ]
+          },
+          {
+            "name": "Sucre",
+            "labelList": [
+              "BIO"
+            ]
+          },
+          {
+            "name": "Lait demi-écrémé",
+            "labelList": [
+              "BIO"
+            ]
+          },
+          {
+            "name": "Emmental râpé",
+            "labelList": []
+          },
+          {
+            "name": "Beurre",
+            "labelList": [
+              "AOP"
+            ]
+          },
+          {
+            "name": "Farine de blé",
+            "labelList": [
+              "BIO"
+            ]
+          },
+          {
+            "name": "Thym",
+            "labelList": []
+          },
+          {
+            "name": "Laurier feuille",
+            "labelList": []
+          }
+        ]
+      },
+      {
+        "name": "St Nectaire",
+        "meal": "lunch",
+        "dish": "laitier",
+        "isHomeMade": false,
+        "seasonality": "NG",
+        "ingredientList": [
+          {
+            "name": "Saint Nectaire",
+            "labelList": [
+              "AOP"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Compote pomme",
+        "meal": "lunch",
+        "dish": "dessert",
+        "isHomeMade": false,
+        "seasonality": "NG",
+        "ingredientList": [
+          {
+            "name": "Compote",
+            "labelList": [
+              "BIO"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Baguette viennoise barre de chocolat",
+        "meal": "snackAfternoon",
+        "isHomeMade": false,
+        "seasonality": "NG",
+        "ingredientList": [
+          {
+            "name": "Baguette",
+            "labelList": []
+          },
+          {
+            "name": "Chocolat noir",
+            "labelList": []
+          }
+        ]
+      },
+      {
+        "name": "Clémentine",
+        "meal": "snackAfternoon",
+        "isHomeMade": false,
+        "seasonality": "A",
+        "ingredientList": [
+          {
+            "name": "Clémentine",
+            "labelList": [
+              "BIO"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "day": "2026-11-26T00:00:00.000Z",
+    "recipeList": [
+      {
+        "name": "crumble de betterave et chèvre ",
+        "meal": "lunch",
+        "dish": "entree",
+        "isHomeMade": true,
+        "seasonality": "A",
+        "ingredientList": [
+          {
+            "name": "Betterave rouge",
+            "labelList": [
+              "BIO"
+            ]
+          },
+          {
+            "name": "Chèvre",
+            "labelList": []
+          },
+          {
+            "name": "Beurre",
+            "labelList": [
+              "AOP"
+            ]
+          },
+          {
+            "name": "Farine de blé",
+            "labelList": [
+              "BIO"
+            ]
+          },
+          {
+            "name": "Chapelure",
+            "labelList": []
+          },
+          {
+            "name": "Roquette",
+            "labelList": [
+              "BIO"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Pièce de bœuf confite",
+        "meal": "lunch",
+        "dish": "vpo",
+        "isHomeMade": true,
+        "seasonality": "A",
+        "ingredientList": [
+          {
+            "name": "Boeuf",
+            "labelList": [
+              "BIO"
+            ]
+          },
+          {
+            "name": "Carotte",
+            "labelList": [
+              "BIO"
+            ]
+          },
+          {
+            "name": "Céleri branche",
+            "labelList": [
+              "BIO"
+            ]
+          },
+          {
+            "name": "Oignon",
+            "labelList": [
+              "BIO"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Gratin de céleri ",
+        "meal": "lunch",
+        "dish": "accompagnement",
+        "isHomeMade": true,
+        "seasonality": "B",
+        "ingredientList": [
+          {
+            "name": "Pomme de terre",
+            "labelList": [
+              "BIO"
+            ]
+          },
+          {
+            "name": "Céleri-rave",
+            "labelList": [
+              "BIO"
+            ]
+          },
+          {
+            "name": "Crème UHT 35%",
+            "labelList": [
+              "BIO"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Crémeux citron et son biscuit noix de coco",
+        "meal": "lunch",
+        "dish": "dessert",
+        "isHomeMade": true,
+        "seasonality": "NG",
+        "ingredientList": [
+          {
+            "name": "Oeuf liquide",
+            "labelList": []
+          },
+          {
+            "name": "Eau",
+            "labelList": []
+          },
+          {
+            "name": "Beurre",
+            "labelList": [
+              "AOP"
+            ]
+          },
+          {
+            "name": "Fécule de maïs",
+            "labelList": [
+              "BIO"
+            ]
+          },
+          {
+            "name": "Sucre",
+            "labelList": [
+              "BIO"
+            ]
+          },
+          {
+            "name": "Jus",
+            "labelList": [
+              "BIO"
+            ]
+          },
+          {
+            "name": "Farine de riz",
+            "labelList": []
+          },
+          {
+            "name": "Farine de blé",
+            "labelList": [
+              "BIO"
+            ]
+          },
+          {
+            "name": "Noix de coco",
+            "labelList": []
+          }
+        ]
+      },
+      {
+        "name": "Quatre quart",
+        "meal": "snackAfternoon",
+        "isHomeMade": true,
+        "seasonality": "NG",
+        "ingredientList": [
+          {
+            "name": "Beurre",
+            "labelList": [
+              "AOP"
+            ]
+          },
+          {
+            "name": "Oeuf liquide",
+            "labelList": []
+          },
+          {
+            "name": "Farine de blé",
+            "labelList": [
+              "BIO"
+            ]
+          },
+          {
+            "name": "Sucre",
+            "labelList": [
+              "BIO"
+            ]
+          },
+          {
+            "name": "Levure",
+            "labelList": []
+          },
+          {
+            "name": "Sel blanc fin",
+            "labelList": []
+          }
+        ]
+      },
+      {
+        "name": "verre de lait",
+        "meal": "snackAfternoon",
+        "isHomeMade": false,
+        "seasonality": "NG",
+        "ingredientList": [
+          {
+            "name": "Lait demi-écrémé",
+            "labelList": [
+              "BIO"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "day": "2026-11-27T00:00:00.000Z",
+    "recipeList": [
+      {
+        "name": "Velouté de potimarron au basilic",
+        "meal": "lunch",
+        "dish": "entree",
+        "isHomeMade": false,
+        "seasonality": "B",
+        "ingredientList": [
+          {
+            "name": "Potimarron",
+            "labelList": [
+              "BIO"
+            ]
+          },
+          {
+            "name": "Carotte",
+            "labelList": [
+              "BIO"
+            ]
+          },
+          {
+            "name": "Pomme de terre",
+            "labelList": [
+              "BIO"
+            ]
+          },
+          {
+            "name": "Oignon",
+            "labelList": [
+              "BIO"
+            ]
+          },
+          {
+            "name": "Crème fraîche",
+            "labelList": []
+          }
+        ]
+      },
+      {
+        "name": "Poulet aux épices",
+        "meal": "lunch",
+        "dish": "vpo",
+        "isHomeMade": false,
+        "seasonality": "NG",
+        "ingredientList": [
+          {
+            "name": "Poulet",
+            "labelList": [
+              "BIO"
+            ]
+          },
+          {
+            "name": "Paprika",
+            "labelList": []
+          },
+          {
+            "name": "Curcuma",
+            "labelList": []
+          }
+        ]
+      },
+      {
+        "name": "Carottes persillées",
+        "meal": "lunch",
+        "dish": "accompagnement",
+        "isHomeMade": false,
+        "seasonality": "A",
+        "ingredientList": [
+          {
+            "name": "Carotte",
+            "labelList": [
+              "BIO"
+            ]
+          },
+          {
+            "name": "Oignons",
+            "labelList": [
+              "BIO"
+            ]
+          },
+          {
+            "name": "Cumin",
+            "labelList": []
+          }
+        ]
+      },
+      {
+        "name": "Camembert",
+        "meal": "lunch",
+        "dish": "laitier",
+        "isHomeMade": false,
+        "seasonality": "NG",
+        "ingredientList": [
+          {
+            "name": "Camembert",
+            "labelList": [
+              "BIO"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Oranges",
+        "meal": "lunch",
+        "dish": "dessert",
+        "isHomeMade": false,
+        "seasonality": "C",
+        "ingredientList": [
+          {
+            "name": "Orange",
+            "labelList": [
+              "BIO"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "pain et confiture",
+        "meal": "snackAfternoon",
+        "isHomeMade": true,
+        "seasonality": "NG",
+        "ingredientList": [
+          {
+            "name": "Confiture",
+            "labelList": [
+              "BIO"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Compote de fruits",
+        "meal": "snackAfternoon",
+        "isHomeMade": false,
+        "seasonality": "NG",
+        "ingredientList": [
+          {
+            "name": "Compote",
+            "labelList": [
+              "BIO"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

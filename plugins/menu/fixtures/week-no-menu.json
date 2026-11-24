@@ -1,0 +1,6 @@
+{
+  "_comment": "Week layout on Saturday after the last published day: nothing to show.",
+  "now": "2026-11-28T10:00:00+01:00",
+  "input": "inputs/meridio-2026-11-23.json",
+  "settings": { "display": "week" }
+}

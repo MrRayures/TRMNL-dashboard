@@ -1,0 +1,52 @@
+# Refreshes the data the plugins poll, on the `data` branch, which GitHub
+# Pages publishes at https://mrrayures.github.io/TRMNL-dashboard/.
+# Only public data goes there: the repository and the site are public.
+name: sync data
+
+on:
+  schedule:
+    - cron: '0 3 * * 1' # every Monday, 03:00 UTC
+  workflow_dispatch: # "Run workflow" button, for a manual refresh
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-data
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check out the data branch (created on first run)
+        run: |
+          if git ls-remote --exit-code --heads origin data; then
+            git fetch --depth 1 origin data
+            git worktree add out FETCH_HEAD
+          else
+            git worktree add --orphan -b data out
+          fi
+
+      - name: Menu
+        run: node scripts/sync/menu.mjs out/menu.json
+
+      - name: Commit if changed
+        working-directory: out
+        run: |
+          touch .nojekyll
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No change."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898299+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore(data): refresh $(date -u +%F)"
+          git push origin HEAD:data
