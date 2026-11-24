@@ -1,0 +1,5 @@
+{
+  "_comment": "The calendar exists but has no event.",
+  "now": "2026-11-24T10:00:00+01:00",
+  "input": "BEGIN:VCALENDAR\nVERSION:2.0\nX-WR-CALNAME:Anniversaires\nEND:VCALENDAR\n"
+}

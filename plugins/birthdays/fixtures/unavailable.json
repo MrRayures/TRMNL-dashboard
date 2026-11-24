@@ -1,0 +1,5 @@
+{
+  "_comment": "Polling failed or the URL is wrong: no iCal data.",
+  "now": "2026-11-24T10:00:00+01:00",
+  "input": { "error": "404 Not Found" }
+}

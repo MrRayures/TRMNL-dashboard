@@ -23,5 +23,9 @@ source is down or changes, and the payload is trimmed to what the plugin uses.
   and the raw API. A test checks that the trimmed data renders the same.
 - The `data` branch is written by the workflow only; never by hand, never
   merged into `main`.
-- Secret URLs (private iCal, tokens) go in TRMNL only: a `password` Form Field
-  referenced as `{{ keyname }}` in the Polling URL, never in `settings.yml`.
+- Secret URLs (private iCal, tokens) go in TRMNL only, in a `password` Form
+  Field, never in `settings.yml`.
+- TRMNL polling only accepts JSON. For anything else (iCal, CSV, HTML): the
+  Static strategy (`{}`) and a serverless `async run(input)` that fetches the
+  source itself, reading the URL from the form field in `input`. On failure,
+  return the empty state with a reason, never the URL or the error message.

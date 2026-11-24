@@ -1,0 +1,25 @@
+# Plugin settings, in TRMNL's private-plugin export format (settings.yml).
+# Keep it in sync with the plugin on trmnl.com; the preview reads `name`,
+# `framework_version` and the custom fields' defaults.
+---
+# Static, not Polling: TRMNL polling only accepts JSON ("Malformed JSON" on an
+# .ics). run() in transform.js downloads the calendar itself instead.
+strategy: static
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: '{}'
+polling_verb: get
+framework_version: 3.4.7
+# The secret iCal address goes in the ical_url form field on trmnl.com only.
+# Never write it here: this repository is public.
+polling_url: ''
+polling_headers: ''
+name: Anniversaires
+description: Les prochains anniversaires, avec l'âge
+refresh_interval: 360
+custom_fields:
+- keyname: ical_url
+  field_type: password
+  name: Adresse iCal secrète
+  description: 'Google Agenda → paramètres de l''agenda Anniversaires → Adresse secrète au format iCal.'
+  placeholder: https://calendar.google.com/calendar/ical/…/private-…/basic.ics

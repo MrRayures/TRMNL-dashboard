@@ -1,0 +1,51 @@
+{% comment %}
+  Partials shared by every view of the birthdays plugin. Design after
+  trmnl.com's Weather example: a big icon, a big value, then items (icon +
+  value + label).
+  birthdays/icon: cake, or rings for a wedding. Inline SVGs: nothing to host.
+    Params: class (framework classes for the img), wedding.
+  birthdays/title_bar: cake icon, title on the left, date on the right.
+    Params: title, date.
+  birthdays/hero: today's birthday, centred under the icon.
+    Params: b ({ greeting, years_label, noces_label }).
+  birthdays/item: one birthday as an item (no icon). Params: b.
+{% endcomment %}
+{% template birthdays/icon %}
+  {% if wedding %}
+    <img class="{{ class }}" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='9' cy='15' r='6'/%3E%3Ccircle cx='15' cy='15' r='6'/%3E%3Cpath d='M7 5l2-3 2 3-2 2z'/%3E%3C/svg%3E" alt="" />
+  {% else %}
+    <img class="{{ class }}" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 21v-9a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v9'/%3E%3Cpath d='M4 15c1.3 0 2-1 4-1s2.7 1 4 1 2-1 4-1 2.7 1 4 1'/%3E%3Cpath d='M2 21h20'/%3E%3Cpath d='M12 10V7'/%3E%3Cpath d='M12 4.5c.8-.8.8-1.7 0-2.5-.8.8-.8 1.7 0 2.5z'/%3E%3C/svg%3E" alt="" />
+  {% endif %}
+{% endtemplate %}
+
+{% template birthdays/title_bar %}
+  <div class="title_bar">
+    {% render "birthdays/icon", class: "image image--adaptive" %}
+    <span class="title">{{ title }}</span>
+    {% if date != blank %}
+      <span class="instance">{{ date }}</span>
+    {% endif %}
+  </div>
+{% endtemplate %}
+
+{% template birthdays/hero %}
+  <div class="flex flex--col flex--center gap--xsmall">
+    <span class="title text--center">{{ b.greeting }}</span>
+    {% if b.years_label != blank %}
+      <span class="value value--xsmall value--tnums">{{ b.years_label }}</span>
+    {% endif %}
+    {% if b.noces_label != blank %}
+      <span class="label">{{ b.noces_label }}</span>
+    {% endif %}
+  </div>
+{% endtemplate %}
+
+{% template birthdays/item %}
+  <div class="item">
+    <div class="meta"></div>
+    <div class="content">
+      <span class="value value--xsmall" data-clamp="1">{{ b.name }}</span>
+      <span class="label">{{ b.countdown }} · {{ b.date_short }}{% if b.age_label != blank %} · {{ b.age_label }}{% endif %}{% if b.noces_label != blank %} · {{ b.noces_label }}{% endif %}</span>
+    </div>
+  </div>
+{% endtemplate %}
