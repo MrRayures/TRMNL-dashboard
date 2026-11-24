@@ -111,6 +111,9 @@ function meals(recipes) {
 
 function shapeMenu(days, now) {
   const today = parisToday(now)
+  // Title bar date, e.g. "24 novembre 2026".
+  const t = toDate(today)
+  const today_label = `${dayNumber(t)} ${MONTHS[t.getUTCMonth()]} ${t.getUTCFullYear()}`
   const served = days
     .filter((d) => d && typeof d.day === 'string' && (d.recipeList || []).length > 0)
     .map((d) => ({ date: d.day.slice(0, 10), recipes: d.recipeList }))
@@ -118,7 +121,7 @@ function shapeMenu(days, now) {
 
   const todayMenu = served.find((d) => d.date === today)
   const shown = todayMenu || served.find((d) => d.date > today)
-  if (!shown) return { service: false, day_label: '', lunch: [], snack: [], week_label: '', week: [] }
+  if (!shown) return { service: false, today_label, day_label: '', lunch: [], snack: [], week_label: '', week: [] }
 
   // The school week (Monday to Sunday) of the shown day: on a weekend, the
   // shown day is next Monday, so this is next week.
@@ -129,6 +132,7 @@ function shapeMenu(days, now) {
 
   return {
     service: Boolean(todayMenu),
+    today_label,
     day_label: dayLabel(shown.date),
     ...meals(shown.recipes),
     week_label: rangeLabel(week[0].date, week[week.length - 1].date),

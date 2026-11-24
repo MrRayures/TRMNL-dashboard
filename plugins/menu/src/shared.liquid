@@ -5,7 +5,18 @@
   menu/course: one dish. Params: course ({ dish?, name, labels, seasonal,
     homemade }), compact (true in the week columns: no dish
     type, badges wrap under the name).
+  menu/title_bar: fork and knife icon, title on the left, date on the right.
+    Params: title, date. The icon is an inline SVG: nothing to host.
 {% endcomment %}
+{% template menu/title_bar %}
+  <div class="title_bar">
+    <img class="image" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 2v7a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2V2'/%3E%3Cpath d='M7 2v20'/%3E%3Cpath d='M19 15V2a4 4 0 0 0-4 4v7a2 2 0 0 0 2 2h2zm0 0v7'/%3E%3C/svg%3E" alt="" />
+    <span class="title">{{ title }}</span>
+    {% if date != blank %}
+      <span class="instance">{{ date }}</span>
+    {% endif %}
+  </div>
+{% endtemplate %}
 {% template menu/badges %}
   {% for tag in labels %}
     <span class="label label--small label--outline">{{ tag }}</span>

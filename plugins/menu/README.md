@@ -100,6 +100,7 @@ Both end with a full-width footer, "Menu du 23 au 27 novembre".
 | Key         | Type                                                   | Notes |
 | ----------- | ------------------------------------------------------ | ----- |
 | `service`   | boolean                                                | `true` when today is served. |
+| `today_label` | string                                               | Today's date for the title bar, "24 novembre 2026" ("1er" on the first). Always set. |
 | `day_label` | string                                                 | Day of the menu shown, "Lundi 23 novembre"; `""` when none. |
 | `lunch`     | `{ dish, name, labels[], seasonal, homemade }[]`       | Entrée → Plat → Accompagnement → Laitier → Dessert; any may be missing. |
 | `snack`     | `{ name, labels[], seasonal, homemade }[]`             | Afternoon snack; may be empty. |
