@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% if p %}{{ p.title }} — {% endif %}TRMNL preview</title>
+    {% comment %}
+      Gallery: every view of one plugin as a card, like trmnl.com's framework
+      examples. Each card is an iframe of the 1:1 page /<plugin>/<view>
+      (shrunk with a CSS transform for the overview only); click it to open
+      it at 1:1. Page chrome only: nothing here touches plugin paint.
+    {% endcomment %}
+    <style>
+      :root { --scale: {{ scale }}; --w: 1872px; --h: 1404px; }
+      body { margin: 0; font-family: system-ui, sans-serif; background: #f4f3f1; color: #222; }
+      header { position: sticky; top: 0; z-index: 1; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;
+        padding: 0.75rem 2rem; background: #fff; border-bottom: 1px solid #e3e1dd; }
+      header h1 { font-size: 1.1rem; margin: 0 1rem 0 0; }
+      header a { color: inherit; }
+      label { font-size: 0.85rem; color: #555; display: flex; gap: 0.4rem; align-items: center; }
+      select { font: inherit; padding: 0.2rem 0.4rem; }
+      main { padding: 1.5rem 2rem 3rem; }
+      h2 { font-size: 1rem; font-weight: 600; margin: 2rem 0 0.75rem; }
+      h2 small { font-weight: 400; color: #777; margin-left: 0.5rem; }
+      .card { display: block; width: calc(var(--w) * var(--scale)); height: calc(var(--h) * var(--scale));
+        overflow: hidden; border-radius: 14px; background: #fff; box-shadow: 0 2px 12px rgb(0 0 0 / 12%); }
+      .card iframe { width: var(--w); height: var(--h); border: 0; transform: scale(var(--scale));
+        transform-origin: 0 0; pointer-events: none; }
+      .cards { display: flex; flex-wrap: wrap; gap: 1.5rem; }
+      figure { margin: 0; }
+      figcaption { font-size: 0.85rem; color: #555; margin-top: 0.5rem; }
+      .empty { color: #777; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1><a href="/">TRMNL</a></h1>
+      <label>Plugin
+        <select onchange="location.href = '/' + this.value + '?bits={{ bits }}'">
+          <option value=""{% unless p %} selected{% endunless %}></option>
+          {% for x in plugins %}<option value="{{ x.name }}"{% if x.name == p.name %} selected{% endif %}>{{ x.title }}</option>{% endfor %}
+        </select>
+      </label>
+      {% if p %}
+      <form method="get">
+        {% for f in extra %}<input type="hidden" name="{{ f[0] }}" value="{{ f[1] }}" />{% endfor %}
+        <label>Fixture
+          <select name="fixture" onchange="this.form.submit()">
+            {% for f in p.fixtures %}<option{% if f == fixture %} selected{% endif %}>{{ f }}</option>{% endfor %}
+            <option value="all"{% if fixture == 'all' %} selected{% endif %}>toutes</option>
+          </select>
+        </label>
+      </form>
+      <form method="get">
+        <input type="hidden" name="fixture" value="{{ fixture }}" />
+        {% for f in extra %}<input type="hidden" name="{{ f[0] }}" value="{{ f[1] }}" />{% endfor %}
+        <label>Couleurs
+          <select name="bits" onchange="this.form.submit()">
+            {% for b in bit_options %}<option value="{{ b[0] }}"{% if b[0] == bits %} selected{% endif %}>{{ b[1] }}</option>{% endfor %}
+          </select>
+        </label>
+      </form>
+      <label>TRMNL X · framework {{ p.framework }}</label>
+      {% endif %}
+    </header>
+    <main>
+      {% for v in views %}
+        <h2>{{ v.title }}<small>{{ v.name }}.liquid</small></h2>
+        <div class="cards">
+          {% for c in v.cards %}
+            <figure>
+              <a class="card" href="{{ c.url }}" title="Ouvrir à 1:1">
+                <iframe src="{{ c.url }}" loading="lazy" tabindex="-1"></iframe>
+              </a>
+              {% if v.cards.size > 1 %}<figcaption>{{ c.fixture }}</figcaption>{% endif %}
+            </figure>
+          {% endfor %}
+        </div>
+      {% else %}
+        {% if p %}<p class="empty">Aucune vue dans plugins/{{ p.name }}/src.</p>{% endif %}
+      {% endfor %}
+    </main>
+  </body>
+</html>
