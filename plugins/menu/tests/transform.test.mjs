@@ -111,3 +111,10 @@ test('week on a weekend: next week; range across months', () => {
   assert.deepEqual(out.week.map((d) => d.day), ['30', '1er', '4'])
   assert.ok(out.week.every((d) => !d.today))
 })
+
+test('run(input), for the serverless runtime, returns the same as transform(input)', async () => {
+  const vm = await import('node:vm')
+  const context = vm.createContext({ input: week })
+  const same = vm.runInContext(`${code}\n;JSON.stringify(run(input)) === JSON.stringify(transform(input))`, context)
+  assert.equal(same, true)
+})

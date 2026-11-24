@@ -10,6 +10,7 @@ scheduled workflow syncs public plugin data (`.claude/rules/data-hosting.md`).
 npm install                        # deps + commit-msg hook
 npm run dev                        # http://localhost:5173 → /menu/full?bits=1&fixture=empty
 npm test                           # transform tests (node --test)
+npm run copy -- menu full          # file to clipboard, to paste on trmnl.com
 npm run release -- menu --dry-run  # version + changelog + tag, then deploy by hand
 ```
 

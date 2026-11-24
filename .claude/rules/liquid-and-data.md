@@ -40,9 +40,11 @@ that behaves the same on both:
 Prefer a transform over complex Liquid (TRMNL's own guidance): it reshapes the
 polled data into flat, display-ready variables.
 
-- `src/transform.js`, **default runtime**: `function transform(input)`, plain
-  JS only (no network, no `require`, no `Intl`, 1 s). Pasted as-is on
-  trmnl.com.
+- `src/transform.js`: `function transform(input)` (default runtime) **and**
+  `function run(input) { return transform(input) }` (serverless runtime):
+  the trmnl.com editor has a single "Serverless" tab and either runtime may
+  run it. Write for the stricter one: plain JS only (no network, no
+  `require`, no `Intl`, 1 s). Pasted as-is.
 - Pure and deterministic given `input` and the current date; read the time
   with `new Date()` only, so tests and the preview can freeze it.
 - Never return `{}`: return a complete object with empty defaults so the

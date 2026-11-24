@@ -20,8 +20,10 @@ work.
   `.view` or `.mashup`: TRMNL (and the preview shell) add them.
 - Never nest `.layout` in `.layout`. Direct children of `.layout` are
   `grid`, `flex` or `columns`.
-- `.layout` centres by default. For document flow use
-  `layout--top layout--align-start`, and `flex--top flex--left` inside.
+- `.layout` centres by default. For document flow use `layout--col
+  layout--top` with a `w--full` child (`flex flex--col flex--left
+  flex--top w--full`). `layout--align-start` does not work there:
+  `.layout--col.layout--top` centres horizontally and wins.
 
 ## Paint belongs to the framework
 

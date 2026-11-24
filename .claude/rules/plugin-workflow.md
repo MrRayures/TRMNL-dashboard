@@ -59,9 +59,15 @@ trmnl.com, in French, with no explanation the user does not need.
   Mode?, Framework CSS version. One table row per field, with the value to
   enter ("vide" / "désactivé" when untouched).
 - Long values (URL, Form Fields YAML) go in their own copy-paste code block,
-  identical to `src/settings.yml`.
+  identical to `src/settings.yml`; Form Fields also get
+  `npm run copy -- <plugin> fields`.
+- Form Fields syntax as trmnl.com accepts it: select options are
+  `- 'Label': value` (a one-key map), not `- 'Label: value'`.
 - Then **Enregistrer → Modifier le balisage**: a table "Onglet → fichier"
-  (Shared, Full, other views, Transform), linking to the `src/` files.
+  with the editor's labels: **Code** with the view picked at the top (Full,
+  Half H, Half V, Quadrant), **Shared**, **Serverless** (transform, language
+  **Node**), each with its `npm run copy -- <plugin> <part>` command (puts
+  the file in the clipboard); then **Save**.
 - End with how to change each setting and how to update after a release.
 - Never put secrets in it: for a private value, say which field to fill
   and where to find the value, not the value.

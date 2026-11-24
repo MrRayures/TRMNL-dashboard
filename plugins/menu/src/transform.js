@@ -1,5 +1,6 @@
-// TRMNL transform, default runtime (plain JS: no network, no Intl, 1 s max).
-// Paste into the plugin's "Transform" editor on trmnl.com.
+// TRMNL transform (plain JS: no network, no Intl, 1 s max). Works in both
+// runtimes, default (transform) and serverless (run).
+// Paste into the plugin's "Serverless" tab (language: Node) on trmnl.com.
 //
 // Input: every published Meridio menu day, as synced weekly to our menu.json
 // (scripts/sync/menu.mjs) or straight from the API:
@@ -144,4 +145,11 @@ function transform(input) {
   // A bare JSON array may reach us as-is or wrapped under `data`: accept both.
   const days = Array.isArray(input) ? input : Array.isArray(input && input.data) ? input.data : []
   return shapeMenu(days, new Date())
+}
+
+// The trmnl.com editor ("Serverless" tab) may run this file in the default
+// runtime, which calls transform(input), or the serverless one, which calls
+// run(input): define both.
+function run(input) {
+  return transform(input)
 }
